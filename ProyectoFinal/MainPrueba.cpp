@@ -196,10 +196,11 @@ int main()
 	Shader animShader("Shaders/anim.vs", "Shaders/anim.frag");
 
 	// Plantetas
-	Model Saturno((char*)"Models/Planetas/Saturno.obj");
-	Model Tierra((char*)"Models/Planetas/Tierra.obj");
-	Model Luna((char*)"Models/Planetas/Luna.obj");
-	Model Sol((char*)"Models/Planetas/Sol.obj");
+	//Model Saturno((char*)"Models/Planetas/Saturno.obj");
+	//Model Tierra((char*)"Models/Planetas/Tierra.obj");
+	//Model Luna((char*)"Models/Planetas/Luna.obj");
+	//Model Sol((char*)"Models/Planetas/Sol.obj");
+	Model Fachada((char*)"Models/Fachada/Fachada.obj");
 
 	// Objetos
 
@@ -522,32 +523,36 @@ int main()
 		view = camera.GetViewMatrix();
 
 		// C A R G A D E M O D E L O S
-
-		// P L A N E T A S
-
-		// s a t u r n o
+		// F A C H A D A
 		glm::mat4 model(1);
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 		glUniform1f(glGetUniformLocation(lightingShader.Program, "transparencia"), 0.0);
-		Saturno.Draw(lightingShader);
+		Fachada.Draw(lightingShader);
+		// P L A N E T A S
 
-		// t i e r r a
-		model = glm::mat4(1);
-		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-		glUniform1f(glGetUniformLocation(lightingShader.Program, "transparencia"), 0.0);
-		Tierra.Draw(lightingShader);
+		//// s a t u r n o
+		//model = glm::mat4(1);
+		//glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		//glUniform1f(glGetUniformLocation(lightingShader.Program, "transparencia"), 0.0);
+		////Saturno.Draw(lightingShader);
 
-		// s o l
-		model = glm::mat4(1);
-		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-		glUniform1f(glGetUniformLocation(lightingShader.Program, "transparencia"), 0.0);
-		Sol.Draw(lightingShader);
+		//// t i e r r a
+		//model = glm::mat4(1);
+		//glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		//glUniform1f(glGetUniformLocation(lightingShader.Program, "transparencia"), 0.0);
+		//Tierra.Draw(lightingShader);
 
-		// l u n a
-		model = glm::mat4(1);
-		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-		glUniform1f(glGetUniformLocation(lightingShader.Program, "transparencia"), 0.0);
-		Luna.Draw(lightingShader);
+		//// s o l
+		//model = glm::mat4(1);
+		//glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		//glUniform1f(glGetUniformLocation(lightingShader.Program, "transparencia"), 0.0);
+		//Sol.Draw(lightingShader);
+
+		//// l u n a
+		//model = glm::mat4(1);
+		//glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		//glUniform1f(glGetUniformLocation(lightingShader.Program, "transparencia"), 0.0);
+		//Luna.Draw(lightingShader);
 
 		// O B J E T O S
 
