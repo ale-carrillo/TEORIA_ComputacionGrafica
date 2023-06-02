@@ -8,7 +8,4 @@ C:\Users\HP\Documents\FACULTAD\2023-2\Computación Gráfica\TEORIA_ComputacionGr
 C:\Users\HP\Documents\FACULTAD\2023-2\Computación Gráfica\TEORIA_ComputacionGrafica\ProyectoFinal\MainPrueba.cpp(754,18): warning C4244: 'initializing': conversion from 'double' to 'GLfloat', possible loss of data
 C:\Users\HP\Documents\FACULTAD\2023-2\Computación Gráfica\TEORIA_ComputacionGrafica\ProyectoFinal\MainPrueba.cpp(756,10): warning C4244: '=': conversion from 'double' to 'GLfloat', possible loss of data
 C:\Users\HP\Documents\FACULTAD\2023-2\Computación Gráfica\TEORIA_ComputacionGrafica\ProyectoFinal\MainPrueba.cpp(757,10): warning C4244: '=': conversion from 'double' to 'GLfloat', possible loss of data
-soil2-debug.lib(image_DXT.obj) : warning LNK4099: PDB '' was not found with 'soil2-debug.lib(image_DXT.obj)' or at ''; linking object as if no debug info
-soil2-debug.lib(image_helper.obj) : warning LNK4099: PDB '' was not found with 'soil2-debug.lib(image_helper.obj)' or at ''; linking object as if no debug info
-soil2-debug.lib(SOIL2.obj) : warning LNK4099: PDB '' was not found with 'soil2-debug.lib(SOIL2.obj)' or at ''; linking object as if no debug info
   ProyectoFinal.vcxproj -> C:\Users\HP\Documents\FACULTAD\2023-2\Computación Gráfica\TEORIA_ComputacionGrafica\Debug\ProyectoFinal.exe
