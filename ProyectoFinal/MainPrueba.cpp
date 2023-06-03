@@ -85,10 +85,11 @@ int playIndex = 0;
 
 // Positions of the point lights
 glm::vec3 pointLightPositions[] = {
-	glm::vec3(posX,posY,posZ),
-	glm::vec3(0,0,0),
-	glm::vec3(0,0,0),
-	glm::vec3(0,0,0)
+	//glm::vec3(posX,posY,posZ),
+	glm::vec3(0,60,0),
+	glm::vec3(0,60,0),
+	glm::vec3(0,60,0),
+	glm::vec3(0,60,0)
 };
 
 glm::vec3 LightP1;
@@ -428,7 +429,7 @@ int main()
 		GLint viewPosLoc = glGetUniformLocation(lightingShader.Program, "viewPos");
 		glUniform3f(viewPosLoc, camera.GetPosition().x, camera.GetPosition().y, camera.GetPosition().z);
 		// Set material properties
-		glUniform1f(glGetUniformLocation(lightingShader.Program, "material.shininess"), 32.0f);
+		glUniform1f(glGetUniformLocation(lightingShader.Program, "material.shininess"), 20.0f);
 		// == ==========================
 		// Here we set all the uniforms for the 5/6 types of lights we have. We have to set them manually and index
 		// the proper PointLight struct in the array to set each uniform variable. This can be done more code-friendly
@@ -437,8 +438,8 @@ int main()
 		// == ==========================
 		// Directional light
 		glUniform3f(glGetUniformLocation(lightingShader.Program, "dirLight.direction"), -0.2f, -1.0f, -0.3f);
-		glUniform3f(glGetUniformLocation(lightingShader.Program, "dirLight.ambient"), 1.0f, 1.0f, 1.0f);
-		glUniform3f(glGetUniformLocation(lightingShader.Program, "dirLight.diffuse"), 0.4f, 0.4f, 0.4f);
+		glUniform3f(glGetUniformLocation(lightingShader.Program, "dirLight.ambient"), 0.5f, 0.5f, 0.5f);
+		glUniform3f(glGetUniformLocation(lightingShader.Program, "dirLight.diffuse"), 0.5f, 0.5f, 0.5f);
 		glUniform3f(glGetUniformLocation(lightingShader.Program, "dirLight.specular"), 0.5f, 0.5f, 0.5f);
 
 
@@ -481,8 +482,10 @@ int main()
 		glUniform1f(glGetUniformLocation(lightingShader.Program, "pointLights[3].quadratic"), 0.032f);
 
 		// SpotLight
-		glUniform3f(glGetUniformLocation(lightingShader.Program, "spotLight.position"), camera.GetPosition().x, camera.GetPosition().y, camera.GetPosition().z);
-		glUniform3f(glGetUniformLocation(lightingShader.Program, "spotLight.direction"), camera.GetFront().x, camera.GetFront().y, camera.GetFront().z);
+		//glUniform3f(glGetUniformLocation(lightingShader.Program, "spotLight.position"), camera.GetPosition().x, camera.GetPosition().y, camera.GetPosition().z);
+		glUniform3f(glGetUniformLocation(lightingShader.Program, "spotLight.position"), 0, 60, 0);
+		glUniform3f(glGetUniformLocation(lightingShader.Program, "spotLight.direction"), 0,90,0);
+		//glUniform3f(glGetUniformLocation(lightingShader.Program, "spotLight.direction"), camera.GetFront().x, camera.GetFront().y, camera.GetFront().z);
 		glUniform3f(glGetUniformLocation(lightingShader.Program, "spotLight.ambient"), 0.0f, 0.0f, 0.0f);
 		glUniform3f(glGetUniformLocation(lightingShader.Program, "spotLight.diffuse"), 0.0f, 0.0f, 0.0f);
 		glUniform3f(glGetUniformLocation(lightingShader.Program, "spotLight.specular"), 0.0f, 0.0f, 0.0f);
