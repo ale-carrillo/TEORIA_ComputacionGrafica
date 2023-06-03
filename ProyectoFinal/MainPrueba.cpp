@@ -46,6 +46,19 @@ float range = 0.0f;
 float rot = 0.0f;
 float movCamera = 0.0f;
 
+
+// Animaciones
+
+// Estrella
+float starRadio = 4.0f;
+float starY = 14.0f;
+float starAngulo = 0.0f;
+float starIncremento = 0.2f;
+float starX = starRadio * glm::cos(glm::radians(starAngulo));
+float starZ = starRadio * glm::sin(glm::radians(starAngulo));;
+
+
+
 // Light attributes
 glm::vec3 lightPos(0.0f, 0.0f, 0.0f);
 glm::vec3 PosIni(-95.0f, 1.0f, -45.0f);
@@ -86,7 +99,7 @@ int playIndex = 0;
 // Positions of the point lights
 glm::vec3 pointLightPositions[] = {
 	//glm::vec3(posX,posY,posZ),
-	glm::vec3(0,60,0),
+	glm::vec3(starX,starY,starZ),
 	glm::vec3(0,60,0),
 	glm::vec3(0,60,0),
 	glm::vec3(0,60,0)
@@ -196,16 +209,19 @@ int main()
 	Shader SkyBoxshader("Shaders/SkyBox.vs", "Shaders/SkyBox.frag");
 	Shader animShader("Shaders/anim.vs", "Shaders/anim.frag");
 
-	// Plantetas
-	//Model Saturno((char*)"Models/Planetas/Saturno.obj");
-	//Model Tierra((char*)"Models/Planetas/Tierra.obj");
-	//Model Luna((char*)"Models/Planetas/Luna.obj");
-	//Model Sol((char*)"Models/Planetas/Sol.obj");
+	// Fachada
 	Model Fachada((char*)"Models/Fachada/Fachada.obj");
 
+	// Plantetas
+	Model Saturno((char*)"Models/Planetas/Saturno/Saturno.obj");
+	Model Tierra((char*)"Models/Planetas/Tierra/Tierra.obj");
+	Model Marte((char*)"Models/Planetas/Tierra/Tierra.obj");
+	//Model Luna((char*)"Models/Planetas/Luna/Luna.obj");
+	Model Sol((char*)"Models/Planetas/Sol/Sol.obj");
+
 	// Objetos
-
-
+	Model Planta((char*)"Models/Objetos/Planta/Planta.obj");
+	Model Estrella((char*)"Models/Objetos/Estrella/Estrella.obj");
 
 	// Build and compile our shader program
 
@@ -533,23 +549,33 @@ int main()
 		Fachada.Draw(lightingShader);
 		// P L A N E T A S
 
-		//// s a t u r n o
-		//model = glm::mat4(1);
-		//glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-		//glUniform1f(glGetUniformLocation(lightingShader.Program, "transparencia"), 0.0);
-		////Saturno.Draw(lightingShader);
+		// Sol
+		model = glm::mat4(1);
+		model = glm::translate(model, glm::vec3(0.0f, 8.0f, 0.f));
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		glUniform1f(glGetUniformLocation(lightingShader.Program, "transparencia"), 0.0);
+		Sol.Draw(lightingShader);
 
-		//// t i e r r a
-		//model = glm::mat4(1);
-		//glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-		//glUniform1f(glGetUniformLocation(lightingShader.Program, "transparencia"), 0.0);
-		//Tierra.Draw(lightingShader);
+		// Tierra
+		model = glm::mat4(1);
+		model = glm::translate(model, glm::vec3(-18.0f, 6.0f, -10.f));
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		glUniform1f(glGetUniformLocation(lightingShader.Program, "transparencia"), 0.0);
+		Tierra.Draw(lightingShader);
 
-		//// s o l
-		//model = glm::mat4(1);
-		//glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-		//glUniform1f(glGetUniformLocation(lightingShader.Program, "transparencia"), 0.0);
-		//Sol.Draw(lightingShader);
+		// Marte
+		model = glm::mat4(1);
+		model = glm::translate(model, glm::vec3(-7.50f, 6.0f, -19.f));
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		glUniform1f(glGetUniformLocation(lightingShader.Program, "transparencia"), 0.0);
+		Marte.Draw(lightingShader);
+
+		// Saturno
+		model = glm::mat4(1);
+		model = glm::translate(model, glm::vec3(18.0f, 6.0f, -10.f));
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		glUniform1f(glGetUniformLocation(lightingShader.Program, "transparencia"), 0.0);
+		Saturno.Draw(lightingShader);
 
 		//// l u n a
 		//model = glm::mat4(1);
@@ -558,6 +584,20 @@ int main()
 		//Luna.Draw(lightingShader);
 
 		// O B J E T O S
+
+		// Planta
+		model = glm::mat4(1);
+		model = glm::translate(model, glm::vec3(-7.0f, 4.5f, 6.f));
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		glUniform1f(glGetUniformLocation(lightingShader.Program, "transparencia"), 0.0);
+		Planta.Draw(lightingShader);
+
+		// Estrella
+		model = glm::mat4(1);
+		model = glm::translate(model, glm::vec3(starX, starY, starZ));
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		glUniform1f(glGetUniformLocation(lightingShader.Program, "transparencia"), 0.0);
+		Estrella.Draw(lightingShader);
 
 		//Traslucidez
 
@@ -644,6 +684,16 @@ int main()
 
 void animacion()
 {
+
+	// Estrella
+	starX = starRadio * glm::cos(glm::radians(starAngulo));
+	starZ = starRadio * glm::sin(glm::radians(starAngulo));
+	pointLightPositions[0] = glm::vec3(starX, starY, starZ);
+
+	starAngulo += starIncremento;
+	if (starAngulo >= 360.0f) {
+		starAngulo = 0.0f;
+	}
 
 	//Movimiento del personaje
 
