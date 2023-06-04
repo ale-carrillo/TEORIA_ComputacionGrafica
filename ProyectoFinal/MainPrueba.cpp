@@ -318,6 +318,7 @@ int main()
 	Model LetreroUrano((char*)"Models/Objetos/Letrero/letreroUrano.obj");
 	Model LetreroNeptuno((char*)"Models/Objetos/Letrero/letreroNeptuno.obj");
 	Model Letrero((char*)"Models/Objetos/Letrero/letrero.obj");
+	Model Marciano((char*)"Models/Objetos/Marciano/marciano.obj");
 
 
 	// Build and compile our shader program
@@ -883,6 +884,13 @@ int main()
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 		glUniform1f(glGetUniformLocation(lightingShader.Program, "transparencia"), 0.0);
 		LetreroJupiter.Draw(lightingShader);
+
+		// Marciano
+		model = glm::mat4(1);
+		model = glm::translate(model, glm::vec3(0.0f, 3.9f, 8.0f));
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		glUniform1f(glGetUniformLocation(lightingShader.Program, "transparencia"), 0.0);
+		Marciano.Draw(lightingShader);
 
 
 		//Traslucidez
