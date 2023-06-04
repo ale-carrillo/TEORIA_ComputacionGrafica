@@ -77,16 +77,34 @@ float naveY = naveIniY + naveRadioY * glm::sin(glm::radians(naveAnguloY));
 float tIncGlobal = 0.004f;
 
 // Tiro parabólico en la Tierra
-
-float gTierra = 9.8f;
-float v0Tierra = 5.0f;
+float gTierra = 9.81f;
+float v0Tierra = 4.0f;
 float anguloTierra = 60.0f;
+float anguloXZTierra = -30.0f;
 float tTierra = 0.0f;
-float z0Tierra = -8.50f;
+float z0Tierra = -7.0f;
+float x0Tierra = -16.0f;
 float y0Tierra = 5.0f;
 float yFinalTierra = 4.2f;
-float zTierra = z0Tierra - v0Tierra * glm::cos(glm::radians(anguloTierra)) * tTierra;
+float zTierra = z0Tierra - v0Tierra * glm::cos(glm::radians(anguloTierra)) * glm::cos(glm::radians(anguloXZTierra)) * tTierra;
+float xTierra = x0Tierra - v0Tierra * glm::cos(glm::radians(anguloTierra)) * glm::sin(glm::radians(anguloXZTierra)) * tTierra;
 float yTierra = y0Tierra + v0Tierra * glm::sin(glm::radians(anguloTierra)) * tTierra - gTierra * 0.5f * tTierra * tTierra;
+
+
+
+// Tiro parabólico en Marte
+float gMarte = 3.711f;
+float v0Marte = 4.0f;
+float anguloMarte = 60.0f;
+float anguloXZMarte = -70.0f;
+float tMarte = 0.0f;
+float z0Marte = -16.0f;
+float x0Marte = -7.5f;
+float y0Marte = 5.0f;
+float yFinalMarte = 4.2f;
+float zMarte = z0Marte - v0Marte * glm::cos(glm::radians(anguloMarte)) * glm::cos(glm::radians(anguloXZMarte)) * tMarte;
+float xMarte = x0Marte - v0Marte * glm::cos(glm::radians(anguloMarte)) * glm::sin(glm::radians(anguloXZMarte)) * tMarte;
+float yMarte = y0Marte + v0Marte * glm::sin(glm::radians(anguloMarte)) * tMarte - gMarte * 0.5f * tMarte * tMarte;
 
 
 
@@ -642,18 +660,32 @@ int main()
 		glUniform1f(glGetUniformLocation(lightingShader.Program, "transparencia"), 0.0);
 		Cohete.Draw(lightingShader);
 
-		// LanzaPelotas
+		// LanzaPelotas (Tierra)
 		model = glm::mat4(1);
-		model = glm::translate(model, glm::vec3(-16.0f, 5.0f, -8.5f));
+		model = glm::translate(model, glm::vec3(-16.0f, 5.0f, -7.0f));
 		model = glm::rotate(model, glm::radians(60.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 		glUniform1f(glGetUniformLocation(lightingShader.Program, "transparencia"), 0.0);
 		LanzaPelotas.Draw(lightingShader);
 
-		// Pelota
+		// Pelota (Tierra)
 		model = glm::mat4(1);
-		model = glm::translate(model, glm::vec3(-16.0f, yTierra, zTierra));
-		model = glm::rotate(model, glm::radians(60.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+		model = glm::translate(model, glm::vec3(xTierra, yTierra, zTierra));
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		glUniform1f(glGetUniformLocation(lightingShader.Program, "transparencia"), 0.0);
+		Pelota.Draw(lightingShader);
+
+		// LanzaPelotas (Marte)
+		model = glm::mat4(1);
+		model = glm::translate(model, glm::vec3(-7.5f, 5.0f, -16.0f));
+		model = glm::rotate(model, glm::radians(20.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		glUniform1f(glGetUniformLocation(lightingShader.Program, "transparencia"), 0.0);
+		LanzaPelotas.Draw(lightingShader);
+
+		// Pelota (Marte)
+		model = glm::mat4(1);
+		model = glm::translate(model, glm::vec3(xMarte, yMarte, zMarte));
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 		glUniform1f(glGetUniformLocation(lightingShader.Program, "transparencia"), 0.0);
 		Pelota.Draw(lightingShader);
@@ -789,11 +821,22 @@ void animacion()
 
 	// Tiro parabólico en la Tierra
 
-	zTierra = z0Tierra - v0Tierra * glm::cos(glm::radians(anguloTierra)) * tTierra;
+	zTierra = z0Tierra - v0Tierra * glm::cos(glm::radians(anguloTierra)) * glm::cos(glm::radians(anguloXZTierra)) * tTierra;
+	xTierra = x0Tierra - v0Tierra * glm::cos(glm::radians(anguloTierra)) * glm::sin(glm::radians(anguloXZTierra)) * tTierra;
 	yTierra = y0Tierra + v0Tierra * glm::sin(glm::radians(anguloTierra)) * tTierra - gTierra * 0.5f * tTierra * tTierra;
 	tTierra += tIncGlobal;
 	if (v0Tierra * glm::sin(glm::radians(anguloTierra)) - gTierra * tTierra < 0.0f && yTierra <= yFinalTierra) {
 		tTierra = 0.0f;
+	}
+
+	// Tiro parabólico en Marte
+
+	zMarte = z0Marte - v0Marte * glm::cos(glm::radians(anguloMarte)) * glm::cos(glm::radians(anguloXZMarte)) * tMarte;
+	xMarte = x0Marte - v0Marte * glm::cos(glm::radians(anguloMarte)) * glm::sin(glm::radians(anguloXZMarte)) * tMarte;
+	yMarte = y0Marte + v0Marte * glm::sin(glm::radians(anguloMarte)) * tMarte - gMarte * 0.5f * tMarte * tMarte;
+	tMarte += tIncGlobal;
+	if (v0Marte * glm::sin(glm::radians(anguloMarte)) - gMarte * tMarte < 0.0f && yMarte <= yFinalMarte) {
+		tMarte = 0.0f;
 	}
 
 	//Movimiento del personaje
