@@ -231,8 +231,8 @@ int main()
 	// Plantetas
 	Model Saturno((char*)"Models/Planetas/Saturno/Saturno.obj");
 	Model Tierra((char*)"Models/Planetas/Tierra/Tierra.obj");
-	Model Marte((char*)"Models/Planetas/Tierra/Tierra.obj");
-	//Model Luna((char*)"Models/Planetas/Luna/Luna.obj");
+	Model Marte((char*)"Models/Planetas/Marte/marte.obj");
+	Model Luna((char*)"Models/Planetas/Luna/Luna.obj");
 	Model Sol((char*)"Models/Planetas/Sol/Sol.obj");
 
 	// Objetos
@@ -243,6 +243,7 @@ int main()
 	Model Pelota((char*)"Models/Objetos/Pelota/Pelota.obj");
 	Model Lampara((char*)"Models/Objetos/Lampara/Lampara.obj");
 	Model Nave((char*)"Models/Objetos/Nave/Nave.obj");
+	Model Robot((char*)"Models/Objetos/Robot/robot.obj");
 
 	// Build and compile our shader program
 
@@ -572,7 +573,7 @@ int main()
 
 		// Sol
 		model = glm::mat4(1);
-		model = glm::translate(model, glm::vec3(0.0f, 8.0f, 0.f));
+		model = glm::translate(model, glm::vec3(0.0f, 14.0f, 0.f));
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 		glUniform1f(glGetUniformLocation(lightingShader.Program, "transparencia"), 0.0);
 		Sol.Draw(lightingShader);
@@ -598,11 +599,12 @@ int main()
 		glUniform1f(glGetUniformLocation(lightingShader.Program, "transparencia"), 0.0);
 		Saturno.Draw(lightingShader);
 
-		//// l u n a
-		//model = glm::mat4(1);
-		//glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-		//glUniform1f(glGetUniformLocation(lightingShader.Program, "transparencia"), 0.0);
-		//Luna.Draw(lightingShader);
+		// l u n a
+		model = glm::mat4(1);
+		model = glm::translate(model, glm::vec3(-18.0f, 6.0f, -12.0f));
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		glUniform1f(glGetUniformLocation(lightingShader.Program, "transparencia"), 0.0);
+		Luna.Draw(lightingShader);
 
 		// O B J E T O S
 
@@ -656,6 +658,13 @@ int main()
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 		glUniform1f(glGetUniformLocation(lightingShader.Program, "transparencia"), 0.0);
 		Nave.Draw(lightingShader);
+
+		// Robot
+		model = glm::mat4(1);
+		model = glm::translate(model, glm::vec3(-4.00f, 4.0f, -17.0f));
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		glUniform1f(glGetUniformLocation(lightingShader.Program, "transparencia"), 0.0);
+		Robot.Draw(lightingShader);
 
 		//Traslucidez
 
