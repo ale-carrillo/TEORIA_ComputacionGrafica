@@ -9,4 +9,5 @@
 .vs/ProyectoFinal/v17/ipch/AutoPCH/2374b0ce1b907275/MAINPRUEBA.ipch
 
 
-Debug/*.*
+Debug/*
+ProyectoFinal/Debug/*

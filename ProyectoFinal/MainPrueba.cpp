@@ -50,12 +50,28 @@ float movCamera = 0.0f;
 // Animaciones
 
 // Estrella
-float starRadio = 4.0f;
-float starY = 14.0f;
-float starAngulo = 0.0f;
-float starIncremento = 0.2f;
+float starIniY = 10.0f;
+float starRadio = 6.0f;
+float starRadioY = 4.0f;
+float starAngulo = 70.0f;
+float starAnguloY = 0.0f;
+float starAnguloInc = 0.4f;
+float starAnguloYInc = 1.0f;
 float starX = starRadio * glm::cos(glm::radians(starAngulo));
-float starZ = starRadio * glm::sin(glm::radians(starAngulo));;
+float starZ = starRadio * glm::sin(glm::radians(starAngulo));
+float starY = starIniY + starRadioY * glm::sin(glm::radians(starAnguloY));
+
+// Nave
+float naveIniY = 13.0f;
+float naveRadio = 5.0f;
+float naveRadioY = 1.25f;
+float naveAngulo = 0.0f;
+float naveAnguloY = 0.0f;
+float naveAnguloInc = 0.3f;
+float naveAnguloYInc = 0.5f;
+float naveX = naveRadio * glm::cos(glm::radians(naveAngulo));
+float naveZ = naveRadio * glm::sin(glm::radians(naveAngulo));
+float naveY = naveIniY + naveRadioY * glm::sin(glm::radians(naveAnguloY));
 
 
 
@@ -222,6 +238,11 @@ int main()
 	// Objetos
 	Model Planta((char*)"Models/Objetos/Planta/Planta.obj");
 	Model Estrella((char*)"Models/Objetos/Estrella/Estrella.obj");
+	Model Cohete((char*)"Models/Objetos/Cohete/Cohete.obj");
+	Model LanzaPelotas((char*)"Models/Objetos/LanzaPelotas/LanzaPelotas.obj");
+	Model Pelota((char*)"Models/Objetos/Pelota/Pelota.obj");
+	Model Lampara((char*)"Models/Objetos/Lampara/Lampara.obj");
+	Model Nave((char*)"Models/Objetos/Nave/Nave.obj");
 
 	// Build and compile our shader program
 
@@ -587,7 +608,7 @@ int main()
 
 		// Planta
 		model = glm::mat4(1);
-		model = glm::translate(model, glm::vec3(-7.0f, 4.5f, 6.f));
+		model = glm::translate(model, glm::vec3(-7.0f, 4.25f, 6.f));
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 		glUniform1f(glGetUniformLocation(lightingShader.Program, "transparencia"), 0.0);
 		Planta.Draw(lightingShader);
@@ -598,6 +619,43 @@ int main()
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 		glUniform1f(glGetUniformLocation(lightingShader.Program, "transparencia"), 0.0);
 		Estrella.Draw(lightingShader);
+
+		// Cohete
+		model = glm::mat4(1);
+		model = glm::translate(model, glm::vec3(6.5f, 5.0f, 4.5f));
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		glUniform1f(glGetUniformLocation(lightingShader.Program, "transparencia"), 0.0);
+		Cohete.Draw(lightingShader);
+
+		// LanzaPelotas
+		model = glm::mat4(1);
+		model = glm::translate(model, glm::vec3(-16.0f, 5.5f, -8.5f));
+		model = glm::rotate(model, glm::radians(60.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		glUniform1f(glGetUniformLocation(lightingShader.Program, "transparencia"), 0.0);
+		LanzaPelotas.Draw(lightingShader);
+
+		// Pelota
+		model = glm::mat4(1);
+		model = glm::translate(model, glm::vec3(-16.0f, 5.5f, -8.5f));
+		model = glm::rotate(model, glm::radians(60.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		glUniform1f(glGetUniformLocation(lightingShader.Program, "transparencia"), 0.0);
+		Pelota.Draw(lightingShader);
+
+		// Lámpara
+		model = glm::mat4(1);
+		model = glm::translate(model, glm::vec3(6.5f, 5.0f, 2.5f));
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		glUniform1f(glGetUniformLocation(lightingShader.Program, "transparencia"), 0.0);
+		Lampara.Draw(lightingShader);
+
+		// Nave
+		model = glm::mat4(1);
+		model = glm::translate(model, glm::vec3(naveX, naveY, naveZ));
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		glUniform1f(glGetUniformLocation(lightingShader.Program, "transparencia"), 0.0);
+		Nave.Draw(lightingShader);
 
 		//Traslucidez
 
@@ -688,11 +746,30 @@ void animacion()
 	// Estrella
 	starX = starRadio * glm::cos(glm::radians(starAngulo));
 	starZ = starRadio * glm::sin(glm::radians(starAngulo));
+	starY = starIniY + starRadioY * glm::sin(glm::radians(starAnguloY));
 	pointLightPositions[0] = glm::vec3(starX, starY, starZ);
 
-	starAngulo += starIncremento;
+	starAngulo += starAnguloInc;
 	if (starAngulo >= 360.0f) {
 		starAngulo = 0.0f;
+	}
+	starAnguloY += starAnguloYInc;
+	if (starAnguloY >= 360.0f) {
+		starAnguloY = 0.0f;
+	}
+
+	// Nave
+	naveX = naveRadio * glm::cos(glm::radians(naveAngulo));
+	naveZ = naveRadio * glm::sin(glm::radians(naveAngulo));
+	naveY = naveIniY + naveRadioY * glm::sin(glm::radians(naveAnguloY));
+
+	naveAngulo += naveAnguloInc;
+	if (naveAngulo >= 360.0f) {
+		naveAngulo = 0.0f;
+	}
+	naveAnguloY += naveAnguloYInc;
+	if (naveAnguloY >= 360.0f) {
+		naveAnguloY = 0.0f;
 	}
 
 	//Movimiento del personaje
@@ -787,7 +864,7 @@ void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mode
 	{
 		active = !active;
 		if (active)
-			LightP1 = glm::vec3(1.0f, 0.0f, 0.0f);
+			LightP1 = glm::vec3(1.0f, 1.0f, 0.0f);
 		else
 			LightP1 = glm::vec3(0.0f, 0.0f, 0.0f);
 	}
