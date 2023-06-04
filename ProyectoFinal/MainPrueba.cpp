@@ -57,20 +57,21 @@ float tierraCentroX = -18.0f;
 float tierraCentroZ = -10.0f;
 float radioLuna = 2.0f;
 float anguloLuna = 0.0f;
-float lunaX = tierraCentroX - radioLuna * glm::sin(glm::radians(anguloLuna));
-float lunaZ = tierraCentroZ - radioLuna * glm::cos(glm::radians(anguloLuna));
+float lunaX, lunaZ;
 
-// Estrella
+// Estrella 1
 float starIniY = 10.0f;
-float starRadio = 6.0f;
-float starRadioY = 4.0f;
+float starRadio = 8.0f;
+float starRadioY = 2.5f;
 float starAngulo = 70.0f;
 float starAnguloY = 0.0f;
-float starAnguloInc = 0.4f;
-float starAnguloYInc = 1.0f;
-float starX = starRadio * glm::cos(glm::radians(starAngulo));
-float starZ = starRadio * glm::sin(glm::radians(starAngulo));
-float starY = starIniY + starRadioY * glm::sin(glm::radians(starAnguloY));
+float starAnguloInc = 0.25f;
+float starAnguloYInc = 0.5f;
+float starX, starZ, starY;
+
+// Estrella 2
+float starRadio2 = 10.0f;
+float starX2, starZ2, starY2;
 
 // Nave
 float naveIniY = 13.0f;
@@ -80,9 +81,21 @@ float naveAngulo = 0.0f;
 float naveAnguloY = 0.0f;
 float naveAnguloInc = 0.3f;
 float naveAnguloYInc = 0.5f;
-float naveX = naveRadio * glm::cos(glm::radians(naveAngulo));
-float naveZ = naveRadio * glm::sin(glm::radians(naveAngulo));
-float naveY = naveIniY + naveRadioY * glm::sin(glm::radians(naveAnguloY));
+float naveX, naveZ, naveY;
+float naveAnguloTambaleo = 0.0f;
+float naveRotApertura = 30.0f;
+float naveRotInc = 0.5f;
+float naveRotX, naveRotZ;
+
+// Meteoro
+float meteoroIniY = 13.0f;
+float meteoroRadio = 8.0f;
+float meteoroRadioY = 1.75f;
+float meteoroAngulo = 60.0f;
+float meteoroAnguloY = 0.0f;
+float meteoroAnguloInc = 0.2f;
+float meteoroAnguloYInc = 0.1f;
+float meteoroX, meteoroZ, meteoroY;
 
 // Para todos los tiros parabólicos
 float tIncGlobal = 0.004f;
@@ -99,9 +112,7 @@ float z0Tierra = -7.0f;
 float x0Tierra = -16.0f;
 float y0Tierra = 5.0f;
 float yFinalTierra = 4.2f;
-float zTierra = z0Tierra - v0Tierra * glm::cos(glm::radians(anguloTierra)) * glm::cos(glm::radians(anguloXZTierra)) * tTierra;
-float xTierra = x0Tierra - v0Tierra * glm::cos(glm::radians(anguloTierra)) * glm::sin(glm::radians(anguloXZTierra)) * tTierra;
-float yTierra = y0Tierra + v0Tierra * glm::sin(glm::radians(anguloTierra)) * tTierra - gTierra * 0.5f * tTierra * tTierra;
+float xTierra, zTierra, yTierra;
 
 // Tiro parabólico en Marte
 float gMarte = 3.711f;
@@ -113,23 +124,19 @@ float z0Marte = -16.0f;
 float x0Marte = -7.5f;
 float y0Marte = 5.0f;
 float yFinalMarte = 4.2f;
-float zMarte = z0Marte - v0Marte * glm::cos(glm::radians(anguloMarte)) * glm::cos(glm::radians(anguloXZMarte)) * tMarte;
-float xMarte = x0Marte - v0Marte * glm::cos(glm::radians(anguloMarte)) * glm::sin(glm::radians(anguloXZMarte)) * tMarte;
-float yMarte = y0Marte + v0Marte * glm::sin(glm::radians(anguloMarte)) * tMarte - gMarte * 0.5f * tMarte * tMarte;
+float xMarte, zMarte, yMarte;
 
 // Tiro parabólico en Saturno
 float gSaturno = 10.44f;
 float v0Saturno = v0Global;
 float anguloSaturno = anguloGlobal;
-float anguloXZSaturno = 30.0f;
+float anguloXZSaturno = 210.0f;
 float tSaturno = 0.0f;
-float z0Saturno = -7.0f;
-float x0Saturno = 16.0f;
+float z0Saturno = -10.0f;
+float x0Saturno = 15.0f;
 float y0Saturno = 5.0f;
 float yFinalSaturno = 4.2f;
-float zSaturno = z0Saturno - v0Saturno * glm::cos(glm::radians(anguloSaturno)) * glm::cos(glm::radians(anguloXZSaturno)) * tSaturno;
-float xSaturno = x0Saturno + v0Saturno * glm::cos(glm::radians(anguloSaturno)) * glm::sin(glm::radians(anguloXZSaturno)) * tSaturno;
-float ySaturno = y0Saturno + v0Saturno * glm::sin(glm::radians(anguloSaturno)) * tSaturno - gSaturno * 0.5f * tSaturno * tSaturno;
+float xSaturno, zSaturno, ySaturno;
 
 
 // Light attributes
@@ -171,16 +178,13 @@ int playIndex = 0;
 
 // Positions of the point lights
 glm::vec3 pointLightPositions[] = {
-	//glm::vec3(posX,posY,posZ),
 	glm::vec3(starX,starY,starZ),
-	glm::vec3(0,60,0),
+	glm::vec3(starX2,starY2,starZ2),
 	glm::vec3(0,60,0),
 	glm::vec3(0,60,0)
 };
 
-glm::vec3 LightP1;
-
-
+glm::vec3 LuzEstrella = glm::vec3(1.0f, 1.0f, 0.0f);
 
 
 void saveFrame(void)
@@ -543,22 +547,22 @@ int main()
 		// Point light 1
 		glUniform3f(glGetUniformLocation(lightingShader.Program, "pointLights[0].position"), pointLightPositions[0].x, pointLightPositions[0].y, pointLightPositions[0].z);
 		glUniform3f(glGetUniformLocation(lightingShader.Program, "pointLights[0].ambient"), 0.05f, 0.05f, 0.05f);
-		glUniform3f(glGetUniformLocation(lightingShader.Program, "pointLights[0].diffuse"), LightP1.x, LightP1.y, LightP1.z);
-		glUniform3f(glGetUniformLocation(lightingShader.Program, "pointLights[0].specular"), LightP1.x, LightP1.y, LightP1.z);
+		glUniform3f(glGetUniformLocation(lightingShader.Program, "pointLights[0].diffuse"), LuzEstrella.x, LuzEstrella.y, LuzEstrella.z);
+		glUniform3f(glGetUniformLocation(lightingShader.Program, "pointLights[0].specular"), LuzEstrella.x, LuzEstrella.y, LuzEstrella.z);
 		glUniform1f(glGetUniformLocation(lightingShader.Program, "pointLights[0].constant"), 1.0f);
-		glUniform1f(glGetUniformLocation(lightingShader.Program, "pointLights[0].linear"), 0.09f);
-		glUniform1f(glGetUniformLocation(lightingShader.Program, "pointLights[0].quadratic"), 0.032f);
+		glUniform1f(glGetUniformLocation(lightingShader.Program, "pointLights[0].linear"), 0.7f);
+		glUniform1f(glGetUniformLocation(lightingShader.Program, "pointLights[0].quadratic"), 1.8f);
 
 
 
 		// Point light 2
 		glUniform3f(glGetUniformLocation(lightingShader.Program, "pointLights[1].position"), pointLightPositions[1].x, pointLightPositions[1].y, pointLightPositions[1].z);
 		glUniform3f(glGetUniformLocation(lightingShader.Program, "pointLights[1].ambient"), 0.05f, 0.05f, 0.05f);
-		glUniform3f(glGetUniformLocation(lightingShader.Program, "pointLights[1].diffuse"), 1.0f, 1.0f, 0.0f);
-		glUniform3f(glGetUniformLocation(lightingShader.Program, "pointLights[1].specular"), 1.0f, 1.0f, 0.0f);
+		glUniform3f(glGetUniformLocation(lightingShader.Program, "pointLights[1].diffuse"), LuzEstrella.x, LuzEstrella.y, LuzEstrella.z);
+		glUniform3f(glGetUniformLocation(lightingShader.Program, "pointLights[1].specular"), LuzEstrella.x, LuzEstrella.y, LuzEstrella.z);
 		glUniform1f(glGetUniformLocation(lightingShader.Program, "pointLights[1].constant"), 1.0f);
-		glUniform1f(glGetUniformLocation(lightingShader.Program, "pointLights[1].linear"), 0.09f);
-		glUniform1f(glGetUniformLocation(lightingShader.Program, "pointLights[1].quadratic"), 0.032f);
+		glUniform1f(glGetUniformLocation(lightingShader.Program, "pointLights[1].linear"), 0.7f);
+		glUniform1f(glGetUniformLocation(lightingShader.Program, "pointLights[1].quadratic"), 1.8f);
 
 		// Point light 3
 		glUniform3f(glGetUniformLocation(lightingShader.Program, "pointLights[2].position"), pointLightPositions[2].x, pointLightPositions[2].y, pointLightPositions[2].z);
@@ -685,7 +689,7 @@ int main()
 		glUniform1f(glGetUniformLocation(lightingShader.Program, "transparencia"), 0.0);
 		Planta.Draw(lightingShader);
 
-		// Estrella
+		// Estrella 1
 		model = glm::mat4(1);
 		model = glm::translate(model, glm::vec3(starX, starY, starZ));
 		model = glm::rotate(model, glm::radians(starAngulo * 2), glm::vec3(0.0f, 1.0f, 0.0f));
@@ -693,16 +697,24 @@ int main()
 		glUniform1f(glGetUniformLocation(lightingShader.Program, "transparencia"), 0.0);
 		Estrella.Draw(lightingShader);
 
+		// Estrella 2
+		model = glm::mat4(1);
+		model = glm::translate(model, glm::vec3(starX2, starY2, starZ2));
+		model = glm::rotate(model, glm::radians(starAngulo * 2), glm::vec3(0.0f, 1.0f, 0.0f));
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		glUniform1f(glGetUniformLocation(lightingShader.Program, "transparencia"), 0.0);
+		Estrella.Draw(lightingShader);
+
 		// Cohete
 		model = glm::mat4(1);
-		model = glm::translate(model, glm::vec3(0.0f, 5.0f, 0.0f));
+		model = glm::translate(model, glm::vec3(0.0f, 5.1f, 0.0f));
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 		glUniform1f(glGetUniformLocation(lightingShader.Program, "transparencia"), 0.0);
 		Cohete.Draw(lightingShader);
 
 		// LanzaPelotas (Tierra)
 		model = glm::mat4(1);
-		model = glm::translate(model, glm::vec3(-16.0f, 5.0f, -7.0f));
+		model = glm::translate(model, glm::vec3(x0Tierra, y0Tierra, z0Tierra));
 		model = glm::rotate(model, glm::radians(60.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 		glUniform1f(glGetUniformLocation(lightingShader.Program, "transparencia"), 0.0);
@@ -717,7 +729,7 @@ int main()
 
 		// LanzaPelotas (Marte)
 		model = glm::mat4(1);
-		model = glm::translate(model, glm::vec3(-7.5f, 5.0f, -16.0f));
+		model = glm::translate(model, glm::vec3(x0Marte, y0Marte, z0Marte));
 		model = glm::rotate(model, glm::radians(20.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 		glUniform1f(glGetUniformLocation(lightingShader.Program, "transparencia"), 0.0);
@@ -732,8 +744,8 @@ int main()
 
 		// LanzaPelotas (Saturno)
 		model = glm::mat4(1);
-		model = glm::translate(model, glm::vec3(16.0f, 5.0f, -7.0f));
-		model = glm::rotate(model, glm::radians(120.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+		model = glm::translate(model, glm::vec3(x0Saturno, y0Saturno, z0Saturno));
+		model = glm::rotate(model, glm::radians(-60.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 		glUniform1f(glGetUniformLocation(lightingShader.Program, "transparencia"), 0.0);
 		LanzaPelotas.Draw(lightingShader);
@@ -755,6 +767,8 @@ int main()
 		// Nave
 		model = glm::mat4(1);
 		model = glm::translate(model, glm::vec3(naveX, naveY, naveZ));
+		model = glm::rotate(model, glm::radians(naveRotX), glm::vec3(1.0f, 0.0f, 0.0f));
+		model = glm::rotate(model, glm::radians(naveRotZ), glm::vec3(0.0f, 0.0f, 1.0f));
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 		glUniform1f(glGetUniformLocation(lightingShader.Program, "transparencia"), 0.0);
 		Nave.Draw(lightingShader);
@@ -775,7 +789,8 @@ int main()
 
 		// Meteorito
 		model = glm::mat4(1);
-		model = glm::translate(model, glm::vec3(0.0f, 14.0f, 6.f));
+		model = glm::translate(model, glm::vec3(meteoroX, meteoroY, meteoroZ));
+		model = glm::rotate(model, glm::radians(meteoroAngulo * 0.5f), glm::vec3(0.0f, 1.0f, 0.0f));
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 		glUniform1f(glGetUniformLocation(lightingShader.Program, "transparencia"), 0.0);
 		Meteorito.Draw(lightingShader);
@@ -810,16 +825,16 @@ int main()
 		//model = glm::scale(model, glm::vec3(0.2f)); // Make it a smaller cube
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 		// Draw the light object (using light's vertex attributes)
-		glBindVertexArray(lightVAO);
-		for (GLuint i = 0; i < 4; i++)
-		{
-			model = glm::mat4(1);
-			model = glm::translate(model, pointLightPositions[i]);
-			model = glm::scale(model, glm::vec3(0.2f)); // Make it a smaller cube
-			glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-			glDrawArrays(GL_TRIANGLES, 0, 36);
-		}
-		glBindVertexArray(0);
+		//glBindVertexArray(lightVAO);
+		//for (GLuint i = 0; i < 4; i++)
+		//{
+		//	model = glm::mat4(1);
+		//	model = glm::translate(model, pointLightPositions[i]);
+		//	model = glm::scale(model, glm::vec3(0.2f)); // Make it a smaller cube
+		//	glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		//	glDrawArrays(GL_TRIANGLES, 0, 36);
+		//}
+		//glBindVertexArray(0);
 
 
 		// Draw skybox as last
@@ -879,7 +894,7 @@ void animacion()
 	lunaX = tierraCentroX + radioLuna * glm::sin(glm::radians(anguloLuna));
 	lunaZ = tierraCentroZ + radioLuna * glm::cos(glm::radians(anguloLuna));
 
-	// Estrella
+	// Estrella 1
 	starX = starRadio * glm::cos(glm::radians(starAngulo));
 	starZ = starRadio * glm::sin(glm::radians(starAngulo));
 	starY = starIniY + starRadioY * glm::sin(glm::radians(starAnguloY));
@@ -894,6 +909,12 @@ void animacion()
 		starAnguloY = 0.0f;
 	}
 
+	// Estrella 2
+	starX2 = starRadio2 * glm::cos(glm::radians(starAngulo + 180));
+	starZ2 = starRadio2 * glm::sin(glm::radians(starAngulo + 180));
+	starY2 = starIniY + starRadioY * glm::cos(glm::radians(starAnguloY));
+	pointLightPositions[1] = glm::vec3(starX2, starY2, starZ2);
+
 	// Nave
 	naveX = naveRadio * glm::cos(glm::radians(naveAngulo));
 	naveZ = naveRadio * glm::sin(glm::radians(naveAngulo));
@@ -906,6 +927,28 @@ void animacion()
 	naveAnguloY += naveAnguloYInc;
 	if (naveAnguloY >= 360.0f) {
 		naveAnguloY = 0.0f;
+	}
+
+	naveRotX = glm::sin(glm::radians(naveAnguloTambaleo)) * naveRotApertura;
+	naveRotZ = glm::cos(glm::radians(naveAnguloTambaleo)) * naveRotApertura;
+
+	naveAnguloTambaleo += naveRotInc;
+	if (naveAnguloTambaleo >= 360.0f) {
+		naveAnguloTambaleo = 0.0f;
+	}
+
+	// Nave
+	meteoroX = meteoroRadio * glm::cos(glm::radians(meteoroAngulo));
+	meteoroZ = meteoroRadio * glm::sin(glm::radians(meteoroAngulo));
+	meteoroY = meteoroIniY + meteoroRadioY * glm::cos(glm::radians(meteoroAnguloY));
+
+	meteoroAngulo += meteoroAnguloInc;
+	if (meteoroAngulo >= 360.0f) {
+		meteoroAngulo = 0.0f;
+	}
+	meteoroAnguloY += meteoroAnguloYInc;
+	if (meteoroAnguloY >= 360.0f) {
+		meteoroAnguloY = 0.0f;
 	}
 
 	// Tiro parabólico en la Tierra
@@ -1024,15 +1067,6 @@ void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mode
 		{
 			keys[key] = false;
 		}
-	}
-
-	if (keys[GLFW_KEY_SPACE])
-	{
-		active = !active;
-		if (active)
-			LightP1 = glm::vec3(1.0f, 1.0f, 0.0f);
-		else
-			LightP1 = glm::vec3(0.0f, 0.0f, 0.0f);
 	}
 }
 
