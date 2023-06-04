@@ -73,6 +73,21 @@ float naveX = naveRadio * glm::cos(glm::radians(naveAngulo));
 float naveZ = naveRadio * glm::sin(glm::radians(naveAngulo));
 float naveY = naveIniY + naveRadioY * glm::sin(glm::radians(naveAnguloY));
 
+// Incremento de tiempo para todos los tiros parabólicos
+float tIncGlobal = 0.004f;
+
+// Tiro parabólico en la Tierra
+
+float gTierra = 9.8f;
+float v0Tierra = 5.0f;
+float anguloTierra = 60.0f;
+float tTierra = 0.0f;
+float z0Tierra = -8.50f;
+float y0Tierra = 5.0f;
+float yFinalTierra = 4.2f;
+float zTierra = z0Tierra - v0Tierra * glm::cos(glm::radians(anguloTierra)) * tTierra;
+float yTierra = y0Tierra + v0Tierra * glm::sin(glm::radians(anguloTierra)) * tTierra - gTierra * 0.5f * tTierra * tTierra;
+
 
 
 // Light attributes
@@ -629,7 +644,7 @@ int main()
 
 		// LanzaPelotas
 		model = glm::mat4(1);
-		model = glm::translate(model, glm::vec3(-16.0f, 5.5f, -8.5f));
+		model = glm::translate(model, glm::vec3(-16.0f, 5.0f, -8.5f));
 		model = glm::rotate(model, glm::radians(60.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 		glUniform1f(glGetUniformLocation(lightingShader.Program, "transparencia"), 0.0);
@@ -637,7 +652,7 @@ int main()
 
 		// Pelota
 		model = glm::mat4(1);
-		model = glm::translate(model, glm::vec3(-16.0f, 5.5f, -8.5f));
+		model = glm::translate(model, glm::vec3(-16.0f, yTierra, zTierra));
 		model = glm::rotate(model, glm::radians(60.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 		glUniform1f(glGetUniformLocation(lightingShader.Program, "transparencia"), 0.0);
@@ -770,6 +785,15 @@ void animacion()
 	naveAnguloY += naveAnguloYInc;
 	if (naveAnguloY >= 360.0f) {
 		naveAnguloY = 0.0f;
+	}
+
+	// Tiro parabólico en la Tierra
+
+	zTierra = z0Tierra - v0Tierra * glm::cos(glm::radians(anguloTierra)) * tTierra;
+	yTierra = y0Tierra + v0Tierra * glm::sin(glm::radians(anguloTierra)) * tTierra - gTierra * 0.5f * tTierra * tTierra;
+	tTierra += tIncGlobal;
+	if (v0Tierra * glm::sin(glm::radians(anguloTierra)) - gTierra * tTierra < 0.0f && yTierra <= yFinalTierra) {
+		tTierra = 0.0f;
 	}
 
 	//Movimiento del personaje
