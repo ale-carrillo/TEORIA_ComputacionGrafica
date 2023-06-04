@@ -1,13 +1,14 @@
 ﻿  MainPrueba.cpp
 C:\Users\HP\Documents\FACULTAD\2023-2\Computación Gráfica\TEORIA_ComputacionGrafica\ProyectoFinal\modelAnim.h(104,44): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
 C:\Users\HP\Documents\FACULTAD\2023-2\Computación Gráfica\TEORIA_ComputacionGrafica\ProyectoFinal\modelAnim.h(519,24): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-C:\Users\HP\Documents\FACULTAD\2023-2\Computación Gráfica\TEORIA_ComputacionGrafica\ProyectoFinal\MainPrueba.cpp(485,24): warning C4244: 'initializing': conversion from 'double' to 'GLfloat', possible loss of data
-C:\Users\HP\Documents\FACULTAD\2023-2\Computación Gráfica\TEORIA_ComputacionGrafica\ProyectoFinal\MainPrueba.cpp(976,11): warning C4244: '=': conversion from 'double' to 'GLfloat', possible loss of data
-C:\Users\HP\Documents\FACULTAD\2023-2\Computación Gráfica\TEORIA_ComputacionGrafica\ProyectoFinal\MainPrueba.cpp(977,11): warning C4244: '=': conversion from 'double' to 'GLfloat', possible loss of data
-C:\Users\HP\Documents\FACULTAD\2023-2\Computación Gráfica\TEORIA_ComputacionGrafica\ProyectoFinal\MainPrueba.cpp(981,18): warning C4244: 'initializing': conversion from 'double' to 'GLfloat', possible loss of data
-C:\Users\HP\Documents\FACULTAD\2023-2\Computación Gráfica\TEORIA_ComputacionGrafica\ProyectoFinal\MainPrueba.cpp(982,18): warning C4244: 'initializing': conversion from 'double' to 'GLfloat', possible loss of data
-C:\Users\HP\Documents\FACULTAD\2023-2\Computación Gráfica\TEORIA_ComputacionGrafica\ProyectoFinal\MainPrueba.cpp(984,10): warning C4244: '=': conversion from 'double' to 'GLfloat', possible loss of data
-C:\Users\HP\Documents\FACULTAD\2023-2\Computación Gráfica\TEORIA_ComputacionGrafica\ProyectoFinal\MainPrueba.cpp(985,10): warning C4244: '=': conversion from 'double' to 'GLfloat', possible loss of data
+C:\Users\HP\Documents\FACULTAD\2023-2\Computación Gráfica\TEORIA_ComputacionGrafica\ProyectoFinal\MainPrueba.cpp(525,24): warning C4244: 'initializing': conversion from 'double' to 'GLfloat', possible loss of data
+C:\Users\HP\Documents\FACULTAD\2023-2\Computación Gráfica\TEORIA_ComputacionGrafica\ProyectoFinal\MainPrueba.cpp(654,78): warning C4244: 'argument': conversion from 'double' to 'GLint', possible loss of data
+C:\Users\HP\Documents\FACULTAD\2023-2\Computación Gráfica\TEORIA_ComputacionGrafica\ProyectoFinal\MainPrueba.cpp(1168,11): warning C4244: '=': conversion from 'double' to 'GLfloat', possible loss of data
+C:\Users\HP\Documents\FACULTAD\2023-2\Computación Gráfica\TEORIA_ComputacionGrafica\ProyectoFinal\MainPrueba.cpp(1169,11): warning C4244: '=': conversion from 'double' to 'GLfloat', possible loss of data
+C:\Users\HP\Documents\FACULTAD\2023-2\Computación Gráfica\TEORIA_ComputacionGrafica\ProyectoFinal\MainPrueba.cpp(1173,18): warning C4244: 'initializing': conversion from 'double' to 'GLfloat', possible loss of data
+C:\Users\HP\Documents\FACULTAD\2023-2\Computación Gráfica\TEORIA_ComputacionGrafica\ProyectoFinal\MainPrueba.cpp(1174,18): warning C4244: 'initializing': conversion from 'double' to 'GLfloat', possible loss of data
+C:\Users\HP\Documents\FACULTAD\2023-2\Computación Gráfica\TEORIA_ComputacionGrafica\ProyectoFinal\MainPrueba.cpp(1176,10): warning C4244: '=': conversion from 'double' to 'GLfloat', possible loss of data
+C:\Users\HP\Documents\FACULTAD\2023-2\Computación Gráfica\TEORIA_ComputacionGrafica\ProyectoFinal\MainPrueba.cpp(1177,10): warning C4244: '=': conversion from 'double' to 'GLfloat', possible loss of data
 LINK : warning LNK4098: defaultlib 'MSVCRT' conflicts with use of other libs; use /NODEFAULTLIB:library
 soil2-debug.lib(etc1_utils.obj) : warning LNK4099: PDB '' was not found with 'soil2-debug.lib(etc1_utils.obj)' or at ''; linking object as if no debug info
 soil2-debug.lib(image_DXT.obj) : warning LNK4099: PDB '' was not found with 'soil2-debug.lib(image_DXT.obj)' or at ''; linking object as if no debug info
