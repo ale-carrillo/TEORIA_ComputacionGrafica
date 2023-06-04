@@ -49,6 +49,17 @@ float movCamera = 0.0f;
 
 // Animaciones
 
+// Rotación de planetas y de luna
+float rotPlaneta = 0.0f;
+
+// Luna
+float tierraCentroX = -18.0f;
+float tierraCentroZ = -10.0f;
+float radioLuna = 2.0f;
+float anguloLuna = 0.0f;
+float lunaX = tierraCentroX - radioLuna * glm::sin(glm::radians(anguloLuna));
+float lunaZ = tierraCentroZ - radioLuna * glm::cos(glm::radians(anguloLuna));
+
 // Estrella
 float starIniY = 10.0f;
 float starRadio = 6.0f;
@@ -73,13 +84,15 @@ float naveX = naveRadio * glm::cos(glm::radians(naveAngulo));
 float naveZ = naveRadio * glm::sin(glm::radians(naveAngulo));
 float naveY = naveIniY + naveRadioY * glm::sin(glm::radians(naveAnguloY));
 
-// Incremento de tiempo para todos los tiros parabólicos
+// Para todos los tiros parabólicos
 float tIncGlobal = 0.004f;
+float v0Global = 4.0f;
+float anguloGlobal = 60.0f;
 
 // Tiro parabólico en la Tierra
 float gTierra = 9.81f;
-float v0Tierra = 4.0f;
-float anguloTierra = 60.0f;
+float v0Tierra = v0Global;
+float anguloTierra = anguloGlobal;
 float anguloXZTierra = -30.0f;
 float tTierra = 0.0f;
 float z0Tierra = -7.0f;
@@ -90,12 +103,10 @@ float zTierra = z0Tierra - v0Tierra * glm::cos(glm::radians(anguloTierra)) * glm
 float xTierra = x0Tierra - v0Tierra * glm::cos(glm::radians(anguloTierra)) * glm::sin(glm::radians(anguloXZTierra)) * tTierra;
 float yTierra = y0Tierra + v0Tierra * glm::sin(glm::radians(anguloTierra)) * tTierra - gTierra * 0.5f * tTierra * tTierra;
 
-
-
 // Tiro parabólico en Marte
 float gMarte = 3.711f;
-float v0Marte = 4.0f;
-float anguloMarte = 60.0f;
+float v0Marte = v0Global;
+float anguloMarte = anguloGlobal;
 float anguloXZMarte = -70.0f;
 float tMarte = 0.0f;
 float z0Marte = -16.0f;
@@ -105,7 +116,6 @@ float yFinalMarte = 4.2f;
 float zMarte = z0Marte - v0Marte * glm::cos(glm::radians(anguloMarte)) * glm::cos(glm::radians(anguloXZMarte)) * tMarte;
 float xMarte = x0Marte - v0Marte * glm::cos(glm::radians(anguloMarte)) * glm::sin(glm::radians(anguloXZMarte)) * tMarte;
 float yMarte = y0Marte + v0Marte * glm::sin(glm::radians(anguloMarte)) * tMarte - gMarte * 0.5f * tMarte * tMarte;
-
 
 
 // Light attributes
@@ -607,13 +617,15 @@ int main()
 		// Sol
 		model = glm::mat4(1);
 		model = glm::translate(model, glm::vec3(0.0f, 14.0f, 0.f));
+		model = glm::rotate(model, glm::radians(rotPlaneta), glm::vec3(0.0f, 1.0f, 0.0f));
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 		glUniform1f(glGetUniformLocation(lightingShader.Program, "transparencia"), 0.0);
 		Sol.Draw(lightingShader);
 
 		// Tierra
 		model = glm::mat4(1);
-		model = glm::translate(model, glm::vec3(-18.0f, 6.0f, -10.f));
+		model = glm::translate(model, glm::vec3(tierraCentroX, 6.0f, tierraCentroZ));
+		model = glm::rotate(model, glm::radians(rotPlaneta), glm::vec3(0.0f, 1.0f, 0.0f));
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 		glUniform1f(glGetUniformLocation(lightingShader.Program, "transparencia"), 0.0);
 		Tierra.Draw(lightingShader);
@@ -621,6 +633,7 @@ int main()
 		// Marte
 		model = glm::mat4(1);
 		model = glm::translate(model, glm::vec3(-7.50f, 6.0f, -19.f));
+		model = glm::rotate(model, glm::radians(rotPlaneta), glm::vec3(0.0f, 1.0f, 0.0f));
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 		glUniform1f(glGetUniformLocation(lightingShader.Program, "transparencia"), 0.0);
 		Marte.Draw(lightingShader);
@@ -628,13 +641,15 @@ int main()
 		// Saturno
 		model = glm::mat4(1);
 		model = glm::translate(model, glm::vec3(18.0f, 6.0f, -10.f));
+		model = glm::rotate(model, glm::radians(rotPlaneta), glm::vec3(0.0f, 1.0f, 0.0f));
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 		glUniform1f(glGetUniformLocation(lightingShader.Program, "transparencia"), 0.0);
 		Saturno.Draw(lightingShader);
 
 		// l u n a
 		model = glm::mat4(1);
-		model = glm::translate(model, glm::vec3(-18.0f, 6.0f, -12.0f));
+		model = glm::translate(model, glm::vec3(lunaX, 6.0f, lunaZ));
+		model = glm::rotate(model, glm::radians(rotPlaneta), glm::vec3(0.0f, 1.0f, 0.0f));
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 		glUniform1f(glGetUniformLocation(lightingShader.Program, "transparencia"), 0.0);
 		Luna.Draw(lightingShader);
@@ -798,6 +813,19 @@ int main()
 
 void animacion()
 {
+	// Rotación de planetas
+	rotPlaneta += 0.2f;
+	if (rotPlaneta >= 360.0f) {
+		rotPlaneta = 0.0f;
+	}
+
+	// Luna
+	anguloLuna += 0.1f;
+	if (anguloLuna >= 360.0f) {
+		anguloLuna = 0.0f;
+	}
+	lunaX = tierraCentroX + radioLuna * glm::sin(glm::radians(anguloLuna));
+	lunaZ = tierraCentroZ + radioLuna * glm::cos(glm::radians(anguloLuna));
 
 	// Estrella
 	starX = starRadio * glm::cos(glm::radians(starAngulo));
