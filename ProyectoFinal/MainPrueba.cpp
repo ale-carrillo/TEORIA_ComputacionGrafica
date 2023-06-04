@@ -277,6 +277,8 @@ int main()
 	Model Lampara((char*)"Models/Objetos/Lampara/Lampara.obj");
 	Model Nave((char*)"Models/Objetos/Nave/Nave.obj");
 	Model Robot((char*)"Models/Objetos/Robot/robot.obj");
+	Model Bandera((char*)"Models/Objetos/Bandera/bandera.obj");
+	Model Meteorito((char*)"Models/Objetos/Meteorito/meteorito.obj");
 
 	// Build and compile our shader program
 
@@ -648,6 +650,12 @@ int main()
 		glUniform1f(glGetUniformLocation(lightingShader.Program, "transparencia"), 0.0);
 		Planta.Draw(lightingShader);
 
+		model = glm::mat4(1);
+		model = glm::translate(model, glm::vec3(-8.0f, 4.25f, 6.f));
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		glUniform1f(glGetUniformLocation(lightingShader.Program, "transparencia"), 0.0);
+		Planta.Draw(lightingShader);
+
 		// Estrella
 		model = glm::mat4(1);
 		model = glm::translate(model, glm::vec3(starX, starY, starZ));
@@ -657,7 +665,7 @@ int main()
 
 		// Cohete
 		model = glm::mat4(1);
-		model = glm::translate(model, glm::vec3(6.5f, 5.0f, 4.5f));
+		model = glm::translate(model, glm::vec3(0.0f, 5.0f, 0.0f));
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 		glUniform1f(glGetUniformLocation(lightingShader.Program, "transparencia"), 0.0);
 		Cohete.Draw(lightingShader);
@@ -712,6 +720,20 @@ int main()
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 		glUniform1f(glGetUniformLocation(lightingShader.Program, "transparencia"), 0.0);
 		Robot.Draw(lightingShader);
+
+		// Bandera
+		model = glm::mat4(1);
+		model = glm::translate(model, glm::vec3(1.5f, 4.0f, 0.0f));
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		glUniform1f(glGetUniformLocation(lightingShader.Program, "transparencia"), 0.0);
+		Bandera.Draw(lightingShader);
+
+		// Meteorito
+		model = glm::mat4(1);
+		model = glm::translate(model, glm::vec3(0.0f, 14.0f, 6.f));
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		glUniform1f(glGetUniformLocation(lightingShader.Program, "transparencia"), 0.0);
+		Meteorito.Draw(lightingShader);
 
 		//Traslucidez
 
