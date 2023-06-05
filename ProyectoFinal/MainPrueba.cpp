@@ -782,9 +782,26 @@ int main()
 		glUniform1f(glGetUniformLocation(lightingShader.Program, "transparencia"), 0.0);
 		Pelota.Draw(lightingShader);
 
-		// Lámpara
+		// Lámpara (Tierra)
 		model = glm::mat4(1);
-		model = glm::translate(model, glm::vec3(6.5f, 5.0f, 2.5f));
+		model = glm::translate(model, glm::vec3(-18.0f, 10.45f, -10.0f));
+		model = glm::rotate(model, glm::radians(180.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		glUniform1f(glGetUniformLocation(lightingShader.Program, "transparencia"), 0.0);
+		Lampara.Draw(lightingShader);
+
+		// Lámpara (Marte)
+		model = glm::mat4(1);
+		model = glm::translate(model, glm::vec3(-7.50f, 10.45f, -19.0f));
+		model = glm::rotate(model, glm::radians(180.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		glUniform1f(glGetUniformLocation(lightingShader.Program, "transparencia"), 0.0);
+		Lampara.Draw(lightingShader);
+
+		// Lámpara (Saturno)
+		model = glm::mat4(1);
+		model = glm::translate(model, glm::vec3(-18.0f, 10.45f, 10.0f));
+		model = glm::rotate(model, glm::radians(180.0f), glm::vec3(1.0f, 0.0f, 0.0f));
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 		glUniform1f(glGetUniformLocation(lightingShader.Program, "transparencia"), 0.0);
 		Lampara.Draw(lightingShader);
@@ -1035,7 +1052,7 @@ void animacion()
 		naveAnguloTambaleo = 0.0f;
 	}
 
-	// Nave
+	// Meteorito
 	meteoroX = meteoroRadio * glm::cos(glm::radians(meteoroAngulo));
 	meteoroZ = meteoroRadio * glm::sin(glm::radians(meteoroAngulo));
 	meteoroY = meteoroIniY + meteoroRadioY * glm::cos(glm::radians(meteoroAnguloY));
