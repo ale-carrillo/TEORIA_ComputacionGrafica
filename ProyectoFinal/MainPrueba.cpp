@@ -119,7 +119,7 @@ float meteoroX, meteoroZ, meteoroY;
 
 // Tiro parabólico del usuario
 float tIncUsuario = 0.004f;
-float v0Usuario = 4.0f;
+float v0Usuario = 2.0f;
 float anguloUsuario = camera.GetPitch();
 float gUsuario = 9.81f;
 float anguloXZUsuario = camera.GetYaw();
@@ -132,8 +132,8 @@ bool puedeTirarUsuario, enTiroUsuario;
 
 // Para todos los tiros parabólicos
 float tIncGlobal = 0.004f;
-float v0Global = 4.0f;
-float anguloGlobal = 60.0f;
+float v0Global = 2.0f;
+float anguloGlobal = 15.0f;
 
 // Tiro parabólico en la Tierra
 float gTierra = 9.81f;
@@ -223,7 +223,7 @@ glm::vec3 LuzEstrella = glm::vec3(1.0f, 1.0f, 0.0f);
 void saveFrame(void)
 {
 
-	printf("posx %f\n", posX);
+	//printf("posx %f\n", posX);
 
 	KeyFrame[FrameIndex].posX = posX;
 	KeyFrame[FrameIndex].posY = posY;
@@ -292,7 +292,7 @@ int main()
 	// Set the required callback functions
 	glfwSetKeyCallback(window, KeyCallback);
 	glfwSetCursorPosCallback(window, MouseCallback);
-	printf("%f", glfwGetTime());
+	//printf("%f", glfwGetTime());
 
 	// GLFW Options
 	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
@@ -1054,7 +1054,7 @@ int main()
 
 void animacion()
 {
-	printf("XZ = %f, Y = %f\n", anguloXZUsuario, anguloUsuario);
+	//printf("XZ = %f, Y = %f\n", anguloXZUsuario, anguloUsuario);
 	if (puedeTirarUsuario && !enTiroUsuario) {
 		xUsuario = x0Usuario = camera.GetFront().x + camera.GetPosition().x;
 		yUsuario = y0Usuario = camera.GetFront().y + camera.GetPosition().y;
@@ -1187,7 +1187,7 @@ void animacion()
 			playIndex++;
 			if (playIndex > FrameIndex - 2)	//end of total animation?
 			{
-				printf("termina anim\n");
+				//printf("termina anim\n");
 				playIndex = 0;
 				play = false;
 			}
@@ -1327,6 +1327,32 @@ void DoMovement()
 
 	}
 
+	// Usuario
+
+	if (keys[GLFW_KEY_3])
+	{
+		tUsuario = 0.0f;
+		v0Usuario += 2.0f;
+		if (v0Usuario > 10.0f) {
+			v0Usuario = v0Global;
+		}
+	}
+	if (keys[GLFW_KEY_4])
+	{
+		tUsuario = 0.0f;
+		gUsuario = gTierra;
+	}
+	if (keys[GLFW_KEY_5])
+	{
+		tUsuario = 0.0f;
+		gUsuario = gMarte;
+	}
+	if (keys[GLFW_KEY_6])
+	{
+		tUsuario = 0.0f;
+		gUsuario = gSaturno;
+	}
+
 	// Tierra
 	if (keys[GLFW_KEY_Z])
 	{
@@ -1347,47 +1373,95 @@ void DoMovement()
 	{
 		rotTierraZ = IncRot(rotTierraZ);
 	}
-	
+	if (keys[GLFW_KEY_B])
+	{
+		tTierra = 0.0f;
+			v0Tierra += 2.0f;
+		if (v0Tierra > 10.0f) {
+			v0Tierra = v0Global;
+		}
+	}
+	if (keys[GLFW_KEY_N])
+	{
+		tTierra = 0.0f;
+			anguloTierra += 15.0f;
+		if (anguloTierra > 90.0f) {
+			anguloTierra = anguloGlobal;
+		}
+	}
+
 	// Marte
-	if (keys[GLFW_KEY_Y])
+	if (keys[GLFW_KEY_R])
 	{
 		escMarte += 0.001f;
 		if (escMarte >= 2.5f) {
 			escMarte = 1.0f;
 		}
 	}
-	if (keys[GLFW_KEY_U])
+	if (keys[GLFW_KEY_T])
 	{
 		rotMarteX = IncRot(rotMarteX);
 	}
-	if (keys[GLFW_KEY_I])
+	if (keys[GLFW_KEY_Y])
 	{
 		rotMarteY = IncRot(rotMarteY);
 	}
-	if (keys[GLFW_KEY_O])
+	if (keys[GLFW_KEY_U])
 	{
 		rotMarteZ = IncRot(rotMarteZ);
 	}
+	if (keys[GLFW_KEY_I])
+	{
+		tMarte = 0.0f;
+			v0Marte += 2.0f;
+		if (v0Marte > 10.0f) {
+			v0Marte = v0Global;
+		}
+	}
+	if (keys[GLFW_KEY_O])
+	{
+		tMarte = 0.0f;
+			anguloMarte += 15.0f;
+		if (anguloMarte > 90.0f) {
+			anguloMarte = anguloGlobal;
+		}
+	}
 
 	// Saturno
-	if (keys[GLFW_KEY_H])
+	if (keys[GLFW_KEY_F])
 	{
 		escSaturno += 0.001f;
 		if (escSaturno >= 2.5f) {
 			escSaturno = 1.0f;
 		}
 	}
-	if (keys[GLFW_KEY_J])
+	if (keys[GLFW_KEY_G])
 	{
 		rotSaturnoX = IncRot(rotSaturnoX);
 	}
-	if (keys[GLFW_KEY_K])
+	if (keys[GLFW_KEY_H])
 	{
 		rotSaturnoY = IncRot(rotSaturnoY);
 	}
-	if (keys[GLFW_KEY_L])
+	if (keys[GLFW_KEY_J])
 	{
 		rotSaturnoZ = IncRot(rotSaturnoZ);
+	}
+	if (keys[GLFW_KEY_K])
+	{
+		tSaturno = 0.0f;
+			v0Saturno += 2.0f;
+		if (v0Saturno > 10.0f) {
+			v0Saturno = v0Global;
+		}
+	}
+	if (keys[GLFW_KEY_L])
+	{
+		tSaturno = 0.0f;
+		anguloSaturno += 15.0f;
+		if (anguloSaturno > 90.0f) {
+			anguloSaturno = anguloGlobal;
+		}
 	}
 
 	
