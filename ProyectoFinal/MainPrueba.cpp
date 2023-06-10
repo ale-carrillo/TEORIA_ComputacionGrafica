@@ -50,7 +50,26 @@ float movCamera = 0.0f;
 // Animaciones
 
 // Rotación de planetas y de luna
+
 float rotPlaneta = 0.0f;
+
+// Planeta Tierra
+float rotTierraX = 0.0f;
+float rotTierraY = 0.0f;
+float rotTierraZ = 0.0f;
+float escTierra = 1.0f;
+
+// Planeta Marte
+float rotMarteX = 0.0f;
+float rotMarteY = 0.0f;
+float rotMarteZ = 0.0f;
+float escMarte = 1.0f;
+
+// Planeta Saturno
+float rotSaturnoX = 0.0f;
+float rotSaturnoY = 0.0f;
+float rotSaturnoZ = 0.0f;
+float escSaturno = 1.0f;
 
 // Luna
 float tierraCentroX = -18.0f;
@@ -96,6 +115,20 @@ float meteoroAnguloY = 0.0f;
 float meteoroAnguloInc = 0.2f;
 float meteoroAnguloYInc = 0.1f;
 float meteoroX, meteoroZ, meteoroY;
+
+
+// Tiro parabólico del usuario
+float tIncUsuario = 0.004f;
+float v0Usuario = 4.0f;
+float anguloUsuario = camera.GetPitch();
+float gUsuario = 9.81f;
+float anguloXZUsuario = camera.GetYaw();
+float tUsuario = 0.0f;
+float z0Usuario, x0Usuario, y0Usuario;
+float yFinalUsuario = 4.2f;
+float xUsuario = x0Usuario, zUsuario = z0Usuario, yUsuario = y0Usuario;
+float rotUsuarioX, rotUsuarioY, rotUsuarioZ;
+bool puedeTirarUsuario, enTiroUsuario;
 
 // Para todos los tiros parabólicos
 float tIncGlobal = 0.004f;
@@ -670,7 +703,10 @@ int main()
 		// Tierra
 		model = glm::mat4(1);
 		model = glm::translate(model, glm::vec3(tierraCentroX, 6.0f, tierraCentroZ));
-		model = glm::rotate(model, glm::radians(rotPlaneta), glm::vec3(0.0f, 1.0f, 0.0f));
+		model = glm::scale(model, glm::vec3(escTierra, escTierra, escTierra));
+		model = glm::rotate(model, glm::radians(rotTierraX), glm::vec3(1.0f, 0.0f, 0.0f));
+		model = glm::rotate(model, glm::radians(rotTierraY), glm::vec3(0.0f, 1.0f, 0.0f));
+		model = glm::rotate(model, glm::radians(rotTierraZ), glm::vec3(0.0f, 0.0f, 1.0f));
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 		glUniform1f(glGetUniformLocation(lightingShader.Program, "transparencia"), 0.0);
 		Tierra.Draw(lightingShader);
@@ -678,7 +714,10 @@ int main()
 		// Marte
 		model = glm::mat4(1);
 		model = glm::translate(model, glm::vec3(-7.50f, 6.0f, -19.f));
-		model = glm::rotate(model, glm::radians(rotPlaneta), glm::vec3(0.0f, 1.0f, 0.0f));
+		model = glm::scale(model, glm::vec3(escMarte, escMarte, escMarte));
+		model = glm::rotate(model, glm::radians(rotMarteX), glm::vec3(1.0f, 0.0f, 0.0f));
+		model = glm::rotate(model, glm::radians(rotMarteY), glm::vec3(0.0f, 1.0f, 0.0f));
+		model = glm::rotate(model, glm::radians(rotMarteZ), glm::vec3(0.0f, 0.0f, 1.0f));
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 		glUniform1f(glGetUniformLocation(lightingShader.Program, "transparencia"), 0.0);
 		Marte.Draw(lightingShader);
@@ -686,7 +725,10 @@ int main()
 		// Saturno
 		model = glm::mat4(1);
 		model = glm::translate(model, glm::vec3(18.0f, 6.0f, -10.f));
-		model = glm::rotate(model, glm::radians(rotPlaneta), glm::vec3(0.0f, 1.0f, 0.0f));
+		model = glm::scale(model, glm::vec3(escSaturno, escSaturno, escSaturno));
+		model = glm::rotate(model, glm::radians(rotSaturnoX), glm::vec3(1.0f, 0.0f, 0.0f));
+		model = glm::rotate(model, glm::radians(rotSaturnoY), glm::vec3(0.0f, 1.0f, 0.0f));
+		model = glm::rotate(model, glm::radians(rotSaturnoZ), glm::vec3(0.0f, 0.0f, 1.0f));
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 		glUniform1f(glGetUniformLocation(lightingShader.Program, "transparencia"), 0.0);
 		Saturno.Draw(lightingShader);
@@ -909,6 +951,23 @@ int main()
 		glUniform1f(glGetUniformLocation(lightingShader.Program, "transparencia"), 0.0);
 		Marciano.Draw(lightingShader);
 
+		// Pelota (Usuario)
+
+		if (puedeTirarUsuario) {
+			model = glm::mat4(1);
+			model = glm::translate(model, glm::vec3(xUsuario, yUsuario, zUsuario));
+			model = glm::rotate(model, glm::radians(rotUsuarioX), glm::vec3(1.0f, 0.0f, 0.0f));
+			model = glm::rotate(model, glm::radians(rotUsuarioY), glm::vec3(0.0f, 1.0f, 0.0f));
+			model = glm::rotate(model, glm::radians(rotUsuarioZ), glm::vec3(0.0f, 0.0f, 1.0f));
+			//model = glm::rotate(model, glm::radians(glm::cos(glm::radians(camera.GetYaw())) * (camera.GetPitch())), glm::vec3(1.0f, 0.0f, 0.0f));
+			//model = glm::rotate(model, glm::radians(glm::sin(glm::radians(camera.GetYaw())) * (camera.GetPitch())), glm::vec3(0.0f, 0.0f, 1.0f));
+			//printf("yaw: %f, pitch: %f\n", camera.GetYaw(), camera.GetPitch());
+			//printf("rotX: %f, rotZ: %f\n", glm::cos(glm::radians(-camera.GetYaw()))* (camera.GetPitch()), glm::sin(glm::radians(-camera.GetYaw()))* (camera.GetPitch()));
+			glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+			glUniform1f(glGetUniformLocation(lightingShader.Program, "transparencia"), 0.0);
+			Pelota.Draw(lightingShader);
+		}
+
 
 		//Traslucidez
 
@@ -995,6 +1054,16 @@ int main()
 
 void animacion()
 {
+	printf("XZ = %f, Y = %f\n", anguloXZUsuario, anguloUsuario);
+	if (puedeTirarUsuario && !enTiroUsuario) {
+		xUsuario = x0Usuario = camera.GetFront().x + camera.GetPosition().x;
+		yUsuario = y0Usuario = camera.GetFront().y + camera.GetPosition().y;
+		zUsuario = z0Usuario = camera.GetFront().z + camera.GetPosition().z;
+		rotUsuarioY = -camera.GetYaw();
+		anguloUsuario = camera.GetPitch();
+		anguloXZUsuario = camera.GetYaw();
+	}
+
 	// Rotación de planetas
 	rotPlaneta += 0.2f;
 	if (rotPlaneta >= 360.0f) {
@@ -1096,6 +1165,19 @@ void animacion()
 		tSaturno = 0.0f;
 	}
 
+
+	// Tiro Usuario
+	if (enTiroUsuario) {
+		zUsuario = z0Usuario +  v0Usuario * glm::cos(glm::radians(anguloUsuario)) * glm::sin(glm::radians(anguloXZUsuario)) * tUsuario;
+		xUsuario = x0Usuario +  v0Usuario * glm::cos(glm::radians(anguloUsuario)) * glm::cos(glm::radians(anguloXZUsuario)) * tUsuario;
+		yUsuario = y0Usuario + v0Usuario * glm::sin(glm::radians(anguloUsuario)) * tUsuario - gUsuario * 0.5f * tUsuario * tUsuario;
+		tUsuario += tIncUsuario;
+		if (v0Usuario * glm::sin(glm::radians(anguloUsuario)) - gUsuario * tUsuario < 0.0f && yUsuario <= yFinalUsuario) {
+			tUsuario = 0.0f;
+			enTiroUsuario = false;
+		}
+	}
+
 	//Movimiento del personaje
 
 	if (play)
@@ -1135,6 +1217,17 @@ void animacion()
 // Is called whenever a key is pressed/released via GLFW
 void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mode)
 {
+	// TiroUsuario
+	if (keys[GLFW_KEY_1])
+	{
+		puedeTirarUsuario = !puedeTirarUsuario;
+	}
+	// TiroUsuario
+	if (keys[GLFW_KEY_2])
+	{
+		enTiroUsuario = true;
+	}
+
 	if (keys[GLFW_KEY_L])
 	{
 		if (play == false && (FrameIndex > 1))
@@ -1204,6 +1297,11 @@ void MouseCallback(GLFWwindow* window, double xPos, double yPos)
 	camera.ProcessMouseMovement(xOffset, yOffset);
 }
 
+float IncRot(float rot) {
+	rot += 0.1f;
+	return rot >= 360.f ? 0.0f : rot;
+}
+
 // Moves/alters the camera positions based on user input
 void DoMovement()
 {
@@ -1229,7 +1327,70 @@ void DoMovement()
 
 	}
 
+	// Tierra
+	if (keys[GLFW_KEY_Z])
+	{
+		escTierra += 0.001f;
+		if (escTierra >= 2.5f) {
+			escTierra = 1.0f;
+		}
+	}
+	if (keys[GLFW_KEY_X])
+	{
+		rotTierraX = IncRot(rotTierraX);
+	}
+	if (keys[GLFW_KEY_C])
+	{
+		rotTierraY = IncRot(rotTierraY);
+	}
+	if (keys[GLFW_KEY_V])
+	{
+		rotTierraZ = IncRot(rotTierraZ);
+	}
+	
+	// Marte
+	if (keys[GLFW_KEY_Y])
+	{
+		escMarte += 0.001f;
+		if (escMarte >= 2.5f) {
+			escMarte = 1.0f;
+		}
+	}
+	if (keys[GLFW_KEY_U])
+	{
+		rotMarteX = IncRot(rotMarteX);
+	}
+	if (keys[GLFW_KEY_I])
+	{
+		rotMarteY = IncRot(rotMarteY);
+	}
+	if (keys[GLFW_KEY_O])
+	{
+		rotMarteZ = IncRot(rotMarteZ);
+	}
 
+	// Saturno
+	if (keys[GLFW_KEY_H])
+	{
+		escSaturno += 0.001f;
+		if (escSaturno >= 2.5f) {
+			escSaturno = 1.0f;
+		}
+	}
+	if (keys[GLFW_KEY_J])
+	{
+		rotSaturnoX = IncRot(rotSaturnoX);
+	}
+	if (keys[GLFW_KEY_K])
+	{
+		rotSaturnoY = IncRot(rotSaturnoY);
+	}
+	if (keys[GLFW_KEY_L])
+	{
+		rotSaturnoZ = IncRot(rotSaturnoZ);
+	}
+
+	
 
 	//Mov Personaje
 	if (keys[GLFW_KEY_H])

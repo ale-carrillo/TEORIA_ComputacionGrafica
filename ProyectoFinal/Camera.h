@@ -143,6 +143,16 @@ public:
 		return this->front;
 	}
 
+	GLfloat GetYaw()
+	{
+		return this->yaw;
+	}
+
+	GLfloat GetPitch()
+	{
+		return this->pitch;
+	}
+
 private:
 	// Camera Attributes
 	glm::vec3 position;
