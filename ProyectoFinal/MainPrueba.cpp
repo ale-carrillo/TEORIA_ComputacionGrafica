@@ -1,6 +1,10 @@
 #include <iostream>
 #include <cmath>
 
+#include<stdlib.h>
+
+#include<time.h>
+
 // GLEW
 #include <GL/glew.h>
 
@@ -130,6 +134,8 @@ float xUsuario = x0Usuario, zUsuario = z0Usuario, yUsuario = y0Usuario;
 float rotUsuarioX, rotUsuarioY, rotUsuarioZ;
 bool puedeTirarUsuario, enTiroUsuario;
 
+float canastaX, canastaY, canastaZ, canastaRadio = 3.0f;
+
 // Para todos los tiros parabólicos
 float tIncGlobal = 0.004f;
 float v0Global = 2.0f;
@@ -256,11 +262,26 @@ void interpolation(void)
 
 }
 
+void reubicarCanasta() {
+	float num = rand();
+	canastaX = glm::sin(glm::radians(num - num / 360.0f)) * 6.0f;
+	canastaY = (5000 + rand() % (9001 - 5000)) / 1000.0f;
+	num = rand();
+	canastaZ = glm::sin(glm::radians(num - num / 360.0f)) * 6.0f;
+	printf("x = %f, y = %f, z = %f", canastaX, canastaY, canastaZ);
+}
 
+
+bool verificarPunto() {
+	return sqrtf(pow(xUsuario - canastaX, 2) + pow(zUsuario - canastaZ, 2)) < canastaRadio
+		&& yUsuario >= canastaY - 0.5f && yUsuario <= canastaY + 0.5f;
+}
 
 
 int main()
 {
+	srand(time(NULL));
+	reubicarCanasta();
 	// Init GLFW
 	glfwInit();
 
@@ -336,6 +357,7 @@ int main()
 	Model Cohete((char*)"Models/Objetos/Cohete/Cohete.obj");
 	Model LanzaPelotas((char*)"Models/Objetos/LanzaPelotas/LanzaPelotas.obj");
 	Model Pelota((char*)"Models/Objetos/Pelota/Pelota.obj");
+	Model Canasta((char*)"Models/Planetas/Luna/Luna.obj");
 	Model Lampara((char*)"Models/Objetos/Lampara/Lampara.obj");
 	Model Nave((char*)"Models/Objetos/Nave/Nave.obj");
 	Model Robot((char*)"Models/Objetos/Robot/robot.obj");
@@ -969,6 +991,13 @@ int main()
 		}
 
 
+		// Canasta
+		model = glm::mat4(1);
+		model = glm::translate(model, glm::vec3(canastaX, canastaY, canastaZ));
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		glUniform1f(glGetUniformLocation(lightingShader.Program, "transparencia"), 0.0);
+		Canasta.Draw(lightingShader);
+
 		//Traslucidez
 
 		glEnable(GL_BLEND);
@@ -1051,17 +1080,20 @@ int main()
 	return 0;
 }
 
+void actualizarUsuario() {
+	xUsuario = x0Usuario = camera.GetFront().x + camera.GetPosition().x;
+	yUsuario = y0Usuario = camera.GetFront().y + camera.GetPosition().y;
+	zUsuario = z0Usuario = camera.GetFront().z + camera.GetPosition().z;
+	rotUsuarioY = -camera.GetYaw();
+	anguloUsuario = camera.GetPitch();
+	anguloXZUsuario = camera.GetYaw();
+}
 
 void animacion()
 {
 	//printf("XZ = %f, Y = %f\n", anguloXZUsuario, anguloUsuario);
 	if (puedeTirarUsuario && !enTiroUsuario) {
-		xUsuario = x0Usuario = camera.GetFront().x + camera.GetPosition().x;
-		yUsuario = y0Usuario = camera.GetFront().y + camera.GetPosition().y;
-		zUsuario = z0Usuario = camera.GetFront().z + camera.GetPosition().z;
-		rotUsuarioY = -camera.GetYaw();
-		anguloUsuario = camera.GetPitch();
-		anguloXZUsuario = camera.GetYaw();
+		actualizarUsuario();
 	}
 
 	// Rotación de planetas
@@ -1172,9 +1204,16 @@ void animacion()
 		xUsuario = x0Usuario +  v0Usuario * glm::cos(glm::radians(anguloUsuario)) * glm::cos(glm::radians(anguloXZUsuario)) * tUsuario;
 		yUsuario = y0Usuario + v0Usuario * glm::sin(glm::radians(anguloUsuario)) * tUsuario - gUsuario * 0.5f * tUsuario * tUsuario;
 		tUsuario += tIncUsuario;
-		if (v0Usuario * glm::sin(glm::radians(anguloUsuario)) - gUsuario * tUsuario < 0.0f && yUsuario <= yFinalUsuario) {
+		bool bajando = v0Usuario * glm::sin(glm::radians(anguloUsuario)) - gUsuario * tUsuario < 0.0f;
+		if (bajando && yUsuario <= yFinalUsuario) {
 			tUsuario = 0.0f;
 			enTiroUsuario = false;
+		}
+		if (bajando && verificarPunto()) {
+			printf("PUNTO!");
+			tUsuario = 0.0f;
+			enTiroUsuario = false;
+			reubicarCanasta();
 		}
 	}
 
@@ -1220,12 +1259,17 @@ void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mode
 	// TiroUsuario
 	if (keys[GLFW_KEY_1])
 	{
-		puedeTirarUsuario = !puedeTirarUsuario;
+		if (!enTiroUsuario)
+			puedeTirarUsuario = !puedeTirarUsuario;
 	}
 	// TiroUsuario
 	if (keys[GLFW_KEY_2])
 	{
-		enTiroUsuario = true;
+		if (puedeTirarUsuario) {
+			actualizarUsuario();
+			tUsuario = 0.0f;
+			enTiroUsuario = !enTiroUsuario;
+		}
 	}
 
 	if (keys[GLFW_KEY_L])
