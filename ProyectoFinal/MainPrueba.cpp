@@ -265,7 +265,7 @@ void interpolation(void)
 void reubicarCanasta() {
 	float num = rand();
 	canastaX = glm::sin(glm::radians(num - num / 360.0f)) * 6.0f;
-	canastaY = (5000 + rand() % (9001 - 5000)) / 1000.0f;
+	canastaY = (6000 + rand() % (9001 - 6000)) / 1000.0f;
 	num = rand();
 	canastaZ = glm::sin(glm::radians(num - num / 360.0f)) * 6.0f;
 	printf("x = %f, y = %f, z = %f", canastaX, canastaY, canastaZ);
@@ -357,7 +357,7 @@ int main()
 	Model Cohete((char*)"Models/Objetos/Cohete/Cohete.obj");
 	Model LanzaPelotas((char*)"Models/Objetos/LanzaPelotas/LanzaPelotas.obj");
 	Model Pelota((char*)"Models/Objetos/Pelota/Pelota.obj");
-	Model Canasta((char*)"Models/Planetas/Luna/Luna.obj");
+	Model Canasta((char*)"Models/Objetos/Robot/robot.obj");
 	Model Lampara((char*)"Models/Objetos/Lampara/Lampara.obj");
 	Model Nave((char*)"Models/Objetos/Nave/Nave.obj");
 	Model Robot((char*)"Models/Objetos/Robot/robot.obj");
@@ -981,10 +981,6 @@ int main()
 			model = glm::rotate(model, glm::radians(rotUsuarioX), glm::vec3(1.0f, 0.0f, 0.0f));
 			model = glm::rotate(model, glm::radians(rotUsuarioY), glm::vec3(0.0f, 1.0f, 0.0f));
 			model = glm::rotate(model, glm::radians(rotUsuarioZ), glm::vec3(0.0f, 0.0f, 1.0f));
-			//model = glm::rotate(model, glm::radians(glm::cos(glm::radians(camera.GetYaw())) * (camera.GetPitch())), glm::vec3(1.0f, 0.0f, 0.0f));
-			//model = glm::rotate(model, glm::radians(glm::sin(glm::radians(camera.GetYaw())) * (camera.GetPitch())), glm::vec3(0.0f, 0.0f, 1.0f));
-			//printf("yaw: %f, pitch: %f\n", camera.GetYaw(), camera.GetPitch());
-			//printf("rotX: %f, rotZ: %f\n", glm::cos(glm::radians(-camera.GetYaw()))* (camera.GetPitch()), glm::sin(glm::radians(-camera.GetYaw()))* (camera.GetPitch()));
 			glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 			glUniform1f(glGetUniformLocation(lightingShader.Program, "transparencia"), 0.0);
 			Pelota.Draw(lightingShader);
@@ -994,6 +990,7 @@ int main()
 		// Canasta
 		model = glm::mat4(1);
 		model = glm::translate(model, glm::vec3(canastaX, canastaY, canastaZ));
+		model = glm::rotate(model, glm::radians(rotUsuarioY + 180.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 		glUniform1f(glGetUniformLocation(lightingShader.Program, "transparencia"), 0.0);
 		Canasta.Draw(lightingShader);
@@ -1085,6 +1082,8 @@ void actualizarUsuario() {
 	yUsuario = y0Usuario = camera.GetFront().y + camera.GetPosition().y;
 	zUsuario = z0Usuario = camera.GetFront().z + camera.GetPosition().z;
 	rotUsuarioY = -camera.GetYaw();
+	rotUsuarioX = (camera.GetPitch() - 180.f) * glm::sin(glm::radians(-camera.GetYaw()));
+	rotUsuarioZ = (camera.GetPitch() - 180.f) * glm::cos(glm::radians(-camera.GetYaw()));
 	anguloUsuario = camera.GetPitch();
 	anguloXZUsuario = camera.GetYaw();
 }
