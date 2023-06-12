@@ -275,6 +275,8 @@ void reubicarCanasta() {
 bool verificarPunto() {
 	return sqrtf(pow(xUsuario - canastaX, 2) + pow(zUsuario - canastaZ, 2)) < canastaRadio
 		&& yUsuario >= canastaY - 0.5f && yUsuario <= canastaY + 0.5f;
+
+
 }
 
 
@@ -357,7 +359,7 @@ int main()
 	Model Cohete((char*)"Models/Objetos/Cohete/Cohete.obj");
 	Model LanzaPelotas((char*)"Models/Objetos/LanzaPelotas/LanzaPelotas.obj");
 	Model Pelota((char*)"Models/Objetos/Pelota/Pelota.obj");
-	Model Canasta((char*)"Models/Objetos/Robot/robot.obj");
+	Model Canasta((char*)"Models/Objetos/Canasta/canasta.obj");
 	Model Lampara((char*)"Models/Objetos/Lampara/Lampara.obj");
 	Model Nave((char*)"Models/Objetos/Nave/Nave.obj");
 	Model Robot((char*)"Models/Objetos/Robot/robot.obj");
@@ -372,6 +374,17 @@ int main()
 	Model LetreroSaturno((char*)"Models/Objetos/Letrero/letreroSaturno.obj");
 	Model LetreroUrano((char*)"Models/Objetos/Letrero/letreroUrano.obj");
 	Model LetreroNeptuno((char*)"Models/Objetos/Letrero/letreroNeptuno.obj");
+
+	// info
+	Model LetreroMercurioInf((char*)"Models/Objetos/Informacion/letreroMercurioInf.obj");
+	Model LetreroVenusInf((char*)"Models/Objetos/Informacion/letreroVenusInf.obj");
+	Model LetreroTierraInf((char*)"Models/Objetos/Informacion/letreroTierraInf.obj");
+	Model LetreroMarteInf((char*)"Models/Objetos/Informacion/letreroMarteInf.obj");
+	Model LetreroJupiterInf((char*)"Models/Objetos/Informacion/letreroJupiterInf.obj");
+	Model LetreroSaturnoInf((char*)"Models/Objetos/Informacion/letreroSaturnoInf.obj");
+	Model LetreroUranoInf((char*)"Models/Objetos/Informacion/letreroUranoInf.obj");
+	Model LetreroNeptunoInf((char*)"Models/Objetos/Informacion/letreroNeptunoInf.obj");
+
 	Model Letrero((char*)"Models/Objetos/Letrero/letrero.obj");
 	Model Marciano((char*)"Models/Objetos/Marciano/marciano.obj");
 
@@ -716,7 +729,7 @@ int main()
 
 		// Sol
 		model = glm::mat4(1);
-		model = glm::translate(model, glm::vec3(0.0f, 14.0f, 0.f));
+		model = glm::translate(model, glm::vec3(0.0f, 18.0f, 0.f));
 		model = glm::rotate(model, glm::radians(rotPlaneta), glm::vec3(0.0f, 1.0f, 0.0f));
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 		glUniform1f(glGetUniformLocation(lightingShader.Program, "transparencia"), 0.0);
@@ -909,7 +922,9 @@ int main()
 		glUniform1f(glGetUniformLocation(lightingShader.Program, "transparencia"), 0.0);
 		Telescopio.Draw(lightingShader);
 
-		// Letrero
+		// Letreros
+
+		// Marte
 		model = glm::mat4(1);
 		model = glm::rotate(model, glm::radians(20.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 		model = glm::translate(model, glm::vec3(1.0f, 4.0f, -10.75f));
@@ -918,12 +933,28 @@ int main()
 		LetreroMarte.Draw(lightingShader);
 
 		model = glm::mat4(1);
+		model = glm::rotate(model, glm::radians(20.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+		model = glm::translate(model, glm::vec3(1.0f, 5.0f, -10.4f));
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		glUniform1f(glGetUniformLocation(lightingShader.Program, "transparencia"), 0.0);
+		LetreroMarteInf.Draw(lightingShader);
+
+		// Tierra
+		model = glm::mat4(1);
 		model = glm::rotate(model, glm::radians(60.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 		model = glm::translate(model, glm::vec3(1.0f, 4.0f, -10.75f));
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 		glUniform1f(glGetUniformLocation(lightingShader.Program, "transparencia"), 0.0);
 		LetreroTierra.Draw(lightingShader);
 
+		model = glm::mat4(1);
+		model = glm::rotate(model, glm::radians(60.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+		model = glm::translate(model, glm::vec3(1.0f, 5.0f, -10.4f));
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		glUniform1f(glGetUniformLocation(lightingShader.Program, "transparencia"), 0.0);
+		LetreroTierraInf.Draw(lightingShader);
+
+		// venus
 		model = glm::mat4(1);
 		model = glm::rotate(model, glm::radians(100.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 		model = glm::translate(model, glm::vec3(1.0f, 4.0f, -10.75f));
@@ -932,12 +963,28 @@ int main()
 		LetreroVenus.Draw(lightingShader);
 
 		model = glm::mat4(1);
+		model = glm::rotate(model, glm::radians(100.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+		model = glm::translate(model, glm::vec3(1.0f, 5.0f, -10.4f));
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		glUniform1f(glGetUniformLocation(lightingShader.Program, "transparencia"), 0.0);
+		LetreroVenusInf.Draw(lightingShader);
+
+		// mercurio
+		model = glm::mat4(1);
 		model = glm::rotate(model, glm::radians(140.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 		model = glm::translate(model, glm::vec3(1.0f, 4.0f, -10.75f));
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 		glUniform1f(glGetUniformLocation(lightingShader.Program, "transparencia"), 0.0);
 		LetreroMercurio.Draw(lightingShader);
 
+		model = glm::mat4(1);
+		model = glm::rotate(model, glm::radians(140.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+		model = glm::translate(model, glm::vec3(1.0f, 5.0f, -10.4f));
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		glUniform1f(glGetUniformLocation(lightingShader.Program, "transparencia"), 0.0);
+		LetreroMercurioInf.Draw(lightingShader);
+
+		// Neptuno
 		model = glm::mat4(1);
 		model = glm::rotate(model, glm::radians(220.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 		model = glm::translate(model, glm::vec3(1.0f, 4.0f, -10.75f));
@@ -946,12 +993,29 @@ int main()
 		LetreroNeptuno.Draw(lightingShader);
 
 		model = glm::mat4(1);
+		model = glm::rotate(model, glm::radians(222.5f), glm::vec3(0.0f, 1.0f, 0.0f));
+		model = glm::translate(model, glm::vec3(1.0f, 5.0f, -10.4f));
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		glUniform1f(glGetUniformLocation(lightingShader.Program, "transparencia"), 0.0);
+		LetreroNeptunoInf.Draw(lightingShader);
+
+		// Urano
+		model = glm::mat4(1);
 		model = glm::rotate(model, glm::radians(260.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 		model = glm::translate(model, glm::vec3(1.0f, 4.0f, -10.75f));
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 		glUniform1f(glGetUniformLocation(lightingShader.Program, "transparencia"), 0.0);
 		LetreroUrano.Draw(lightingShader);
 
+		model = glm::mat4(1);
+		model = glm::rotate(model, glm::radians(260.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+		model = glm::translate(model, glm::vec3(1.0f, 5.0f, -10.4f));
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		glUniform1f(glGetUniformLocation(lightingShader.Program, "transparencia"), 0.0);
+		LetreroUranoInf.Draw(lightingShader);
+
+
+		// Saturno
 		model = glm::mat4(1);
 		model = glm::rotate(model, glm::radians(300.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 		model = glm::translate(model, glm::vec3(1.0f, 4.0f, -10.75f));
@@ -960,11 +1024,26 @@ int main()
 		LetreroSaturno.Draw(lightingShader);
 
 		model = glm::mat4(1);
+		model = glm::rotate(model, glm::radians(300.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+		model = glm::translate(model, glm::vec3(1.0f, 5.0f, -10.4f));
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		glUniform1f(glGetUniformLocation(lightingShader.Program, "transparencia"), 0.0);
+		LetreroSaturnoInf.Draw(lightingShader);
+
+		// Jupiter
+		model = glm::mat4(1);
 		model = glm::rotate(model, glm::radians(340.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 		model = glm::translate(model, glm::vec3(1.0f, 4.0f, -10.75f));
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 		glUniform1f(glGetUniformLocation(lightingShader.Program, "transparencia"), 0.0);
 		LetreroJupiter.Draw(lightingShader);
+
+		model = glm::mat4(1);
+		model = glm::rotate(model, glm::radians(340.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+		model = glm::translate(model, glm::vec3(1.0f, 5.0f, -10.4f));
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		glUniform1f(glGetUniformLocation(lightingShader.Program, "transparencia"), 0.0);
+		LetreroJupiterInf.Draw(lightingShader);
 
 		// Marciano
 		model = glm::mat4(1);
@@ -1210,6 +1289,7 @@ void animacion()
 		}
 		if (bajando && verificarPunto()) {
 			printf("PUNTO!");
+			
 			tUsuario = 0.0f;
 			enTiroUsuario = false;
 			reubicarCanasta();
