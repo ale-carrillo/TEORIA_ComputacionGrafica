@@ -4,6 +4,7 @@
 #include<stdlib.h>
 
 #include<time.h>
+#include<chrono>
 
 // GLEW
 #include <GL/glew.h>
@@ -37,7 +38,7 @@ void DoMovement();
 void animacion();
 
 // Window dimensions
-const GLuint WIDTH = 800, HEIGHT = 600;
+const GLuint WIDTH = 1920, HEIGHT = 1080;
 int SCREEN_WIDTH, SCREEN_HEIGHT;
 
 // Camera
@@ -53,9 +54,11 @@ float movCamera = 0.0f;
 
 // Animaciones
 
-// Rotación de planetas y de luna
-
+// Rotación de planetas
 float rotPlaneta = 0.0f;
+
+// Rotación de marcianito
+float rotMarcianoCamara = 0.0f;
 
 // Planeta Tierra
 float rotTierraX = 0.0f;
@@ -132,9 +135,9 @@ float z0Usuario, x0Usuario, y0Usuario;
 float yFinalUsuario = 4.2f;
 float xUsuario = x0Usuario, zUsuario = z0Usuario, yUsuario = y0Usuario;
 float rotUsuarioX, rotUsuarioY, rotUsuarioZ;
-bool puedeTirarUsuario, enTiroUsuario, punto;
-
-float canastaX, canastaY, canastaZ, canastaRadio = 3.0f;
+bool puedeTirarUsuario, enTiroUsuario, punto, mostrarControlesTiro;
+float tempo = 0.0f;
+float canastaX, canastaY, canastaZ, canastaRadio = 1.7f;
 
 // Para todos los tiros parabólicos
 float tIncGlobal = 0.004f;
@@ -274,7 +277,7 @@ void reubicarCanasta() {
 
 bool verificarPunto() {
 	return sqrtf(pow(xUsuario - canastaX, 2) + pow(zUsuario - canastaZ, 2)) < canastaRadio
-		&& yUsuario >= canastaY - 0.5f && yUsuario <= canastaY + 0.5f;
+		&& yUsuario >= canastaY - 0.3f && yUsuario <= canastaY + 0.3f;
 
 
 }
@@ -387,6 +390,9 @@ int main()
 	Model LetreroNeptunoInf((char*)"Models/Objetos/Informacion/letreroNeptunoInf.obj");
 
 	Model LetreroPunto((char*)"Models/Objetos/Informacion/letreroPunto.obj");
+	Model LetreroVerControlesTiro((char*)"Models/Objetos/Informacion/letreroVerMenu.obj");
+	Model LetreroControlesTiro((char*)"Models/Objetos/Informacion/letreroVerMenu.obj");
+	Model LetreroEsc((char*)"Models/Objetos/Indicaciones/esc.obj");
 
 	Model Letrero((char*)"Models/Objetos/Letrero/letrero.obj");
 	Model Marciano((char*)"Models/Objetos/Marciano/marciano.obj");
@@ -1095,13 +1101,21 @@ int main()
 
 		// Pelota (Usuario)
 
+		glm::vec3 p = camera.GetPosition();
+		glm::vec3 f = camera.GetFront();
+		glm::vec3 r = camera.GetRight();
+		glm::vec3 up = camera.GetUp();
+
 		if (punto) {
+			if (tempo < 80.0f) {
+				tempo += 0.2f;
+			}
+			else {
+				punto = false;
+				tempo = 0.0f;
+			}
 			model = glm::mat4(1);
-			glm::vec3 p = camera.GetPosition();
-			glm::vec3 f = camera.GetFront();
-			glm::vec3 r = camera.GetRight();
-			glm::vec3 up = camera.GetUp();
-			model = glm::translate(model, glm::vec3(p.x + f.x + 0.45f * r.x + 0.4f * up.x, p.y + f.y + 0.45f * r.y + 0.4f * up.y, p.z + f.z + 0.45f * r.z + 0.4f * up.z));
+			model = glm::translate(model, glm::vec3(p.x + f.x + 0.65f * r.x + 0.4f * up.x, p.y + f.y + 0.45f * r.y + 0.4f * up.y, p.z + f.z + 0.45f * r.z + 0.4f * up.z));
 			model = glm::rotate(model, glm::radians(rotUsuarioX), glm::vec3(1.0f, 0.0f, 0.0f));
 			model = glm::rotate(model, glm::radians(rotUsuarioZ), glm::vec3(0.0f, 0.0f, 1.0f));
 			model = glm::rotate(model, glm::radians(rotUsuarioY-90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
@@ -1111,11 +1125,55 @@ int main()
 			LetreroPunto.Draw(lightingShader);
 		}
 
+		model = glm::mat4(1);
+		model = glm::translate(model, glm::vec3(p.x + f.x + 0.75f * r.x - 0.45f * up.x, p.y + f.y + 0.75f * r.y - 0.45f * up.y, p.z + f.z + 0.75f * r.z - 0.45f * up.z));
+		model = glm::rotate(model, glm::radians(rotUsuarioX), glm::vec3(1.0f, 0.0f, 0.0f));
+		model = glm::rotate(model, glm::radians(rotUsuarioZ), glm::vec3(0.0f, 0.0f, 1.0f));
+		model = glm::rotate(model, glm::radians(rotUsuarioY - 90.0f + rotMarcianoCamara), glm::vec3(0.0f, 1.0f, 0.0f));
+		model = glm::scale(model, glm::vec3(0.1f));
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		glUniform1f(glGetUniformLocation(lightingShader.Program, "transparencia"), 0.0);
+		Marciano.Draw(lightingShader);
+
+
+		if (mostrarControlesTiro) {
+			model = glm::mat4(1);
+			model = glm::translate(model, glm::vec3(p.x + f.x, p.y + f.y, p.z + f.z));
+			model = glm::rotate(model, glm::radians(rotUsuarioX), glm::vec3(1.0f, 0.0f, 0.0f));
+			model = glm::rotate(model, glm::radians(rotUsuarioZ), glm::vec3(0.0f, 0.0f, 1.0f));
+			model = glm::rotate(model, glm::radians(rotUsuarioY - 90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+			model = glm::scale(model, glm::vec3(0.5f));
+			glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+			glUniform1f(glGetUniformLocation(lightingShader.Program, "transparencia"), 0.0);
+			LetreroVerControlesTiro.Draw(lightingShader);
+		}
+		else {
+			model = glm::mat4(1);
+			model = glm::translate(model, glm::vec3(p.x + f.x + 0.75f * r.x - 0.15f * up.x, p.y + f.y + 0.75f * r.y - 0.15f * up.y, p.z + f.z + 0.75f * r.z - 0.15f * up.z));
+			model = glm::rotate(model, glm::radians(rotUsuarioX), glm::vec3(1.0f, 0.0f, 0.0f));
+			model = glm::rotate(model, glm::radians(rotUsuarioZ), glm::vec3(0.0f, 0.0f, 1.0f));
+			model = glm::rotate(model, glm::radians(rotUsuarioY - 90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+			model = glm::scale(model, glm::vec3(0.22f));
+			glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+			glUniform1f(glGetUniformLocation(lightingShader.Program, "transparencia"), 0.0);
+			LetreroControlesTiro.Draw(lightingShader);
+		}
+
+
+		model = glm::mat4(1);
+		model = glm::translate(model, glm::vec3(p.x + f.x - 0.85f * r.x + 0.45f * up.x, p.y + f.y - 0.85f * r.y + 0.45f * up.y, p.z + f.z - 0.85f * r.z + 0.45f * up.z));
+		model = glm::rotate(model, glm::radians(rotUsuarioX), glm::vec3(1.0f, 0.0f, 0.0f));
+		model = glm::rotate(model, glm::radians(rotUsuarioZ), glm::vec3(0.0f, 0.0f, 1.0f));
+		model = glm::rotate(model, glm::radians(rotUsuarioY - 90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+		model = glm::scale(model, glm::vec3(0.22f));
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		glUniform1f(glGetUniformLocation(lightingShader.Program, "transparencia"), 0.0);
+		LetreroEsc.Draw(lightingShader);
 
 		// Canasta
 		model = glm::mat4(1);
 		model = glm::translate(model, glm::vec3(canastaX, canastaY, canastaZ));
-		model = glm::rotate(model, glm::radians(rotUsuarioY + 180.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+		model = glm::rotate(model, glm::radians(-camera.GetYaw() + 180.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 		glUniform1f(glGetUniformLocation(lightingShader.Program, "transparencia"), 0.0);
 		Canasta.Draw(lightingShader);
@@ -1206,18 +1264,19 @@ void actualizarUsuario() {
 	xUsuario = x0Usuario = camera.GetFront().x + camera.GetPosition().x;
 	yUsuario = y0Usuario = camera.GetFront().y + camera.GetPosition().y;
 	zUsuario = z0Usuario = camera.GetFront().z + camera.GetPosition().z;
-	rotUsuarioY = -camera.GetYaw();
-	float pitch = camera.GetPitch();
-	int pitchInt = pitch / 360.0;
+	
 	//(pitch - pitchInt * 360.0f)
-	rotUsuarioX = -pitch * glm::sin(glm::radians(camera.GetYaw()));
-	rotUsuarioZ = pitch * glm::cos(glm::radians(camera.GetYaw()));
 	anguloUsuario = camera.GetPitch();
 	anguloXZUsuario = camera.GetYaw();
 }
 
 void animacion()
 {
+	float pitch = camera.GetPitch();
+	int pitchInt = pitch / 360.0;
+	rotUsuarioY = -camera.GetYaw();
+	rotUsuarioX = -pitch * glm::sin(glm::radians(camera.GetYaw()));
+	rotUsuarioZ = pitch * glm::cos(glm::radians(camera.GetYaw()));
 	//printf("XZ = %f, Y = %f\n", anguloXZUsuario, anguloUsuario);
 	if (puedeTirarUsuario && !enTiroUsuario) {
 		actualizarUsuario();
@@ -1227,6 +1286,12 @@ void animacion()
 	rotPlaneta += 0.2f;
 	if (rotPlaneta >= 360.0f) {
 		rotPlaneta = 0.0f;
+	}
+
+	// Rotación de marciano
+	rotMarcianoCamara += 0.5f;
+	if (rotMarcianoCamara >= 360.0f) {
+		rotMarcianoCamara = 0.0f;
 	}
 
 	// Luna
@@ -1341,6 +1406,7 @@ void animacion()
 			printf("PUNTO!");
 			tUsuario = 0.0f;
 			punto = true;
+			tempo = 0.0f;
 			enTiroUsuario = false;
 			reubicarCanasta();
 		}
@@ -1399,6 +1465,12 @@ void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mode
 			tUsuario = 0.0f;
 			enTiroUsuario = !enTiroUsuario;
 		}
+	}
+
+
+	if (keys[GLFW_KEY_SPACE])
+	{
+		mostrarControlesTiro = !mostrarControlesTiro;
 	}
 
 	if (keys[GLFW_KEY_L])
