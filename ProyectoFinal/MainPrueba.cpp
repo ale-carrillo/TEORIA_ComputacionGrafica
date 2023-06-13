@@ -132,7 +132,7 @@ float z0Usuario, x0Usuario, y0Usuario;
 float yFinalUsuario = 4.2f;
 float xUsuario = x0Usuario, zUsuario = z0Usuario, yUsuario = y0Usuario;
 float rotUsuarioX, rotUsuarioY, rotUsuarioZ;
-bool puedeTirarUsuario, enTiroUsuario;
+bool puedeTirarUsuario, enTiroUsuario, punto;
 
 float canastaX, canastaY, canastaZ, canastaRadio = 3.0f;
 
@@ -366,6 +366,7 @@ int main()
 	Model Bandera((char*)"Models/Objetos/Bandera/bandera.obj");
 	Model Meteorito((char*)"Models/Objetos/Meteorito/meteorito.obj");
 	Model Telescopio((char*)"Models/Objetos/Telescopio/telescopio.obj");
+
 	Model LetreroMercurio((char*)"Models/Objetos/Letrero/letreroMercurio.obj");
 	Model LetreroVenus((char*)"Models/Objetos/Letrero/letreroVenus.obj");
 	Model LetreroTierra((char*)"Models/Objetos/Letrero/letreroTierra.obj");
@@ -384,6 +385,8 @@ int main()
 	Model LetreroSaturnoInf((char*)"Models/Objetos/Informacion/letreroSaturnoInf.obj");
 	Model LetreroUranoInf((char*)"Models/Objetos/Informacion/letreroUranoInf.obj");
 	Model LetreroNeptunoInf((char*)"Models/Objetos/Informacion/letreroNeptunoInf.obj");
+
+	Model LetreroPunto((char*)"Models/Objetos/Informacion/letreroPunto.obj");
 
 	Model Letrero((char*)"Models/Objetos/Letrero/letrero.obj");
 	Model Marciano((char*)"Models/Objetos/Marciano/marciano.obj");
@@ -1058,11 +1061,54 @@ int main()
 			model = glm::mat4(1);
 			model = glm::translate(model, glm::vec3(xUsuario, yUsuario, zUsuario));
 			model = glm::rotate(model, glm::radians(rotUsuarioX), glm::vec3(1.0f, 0.0f, 0.0f));
-			model = glm::rotate(model, glm::radians(rotUsuarioY), glm::vec3(0.0f, 1.0f, 0.0f));
 			model = glm::rotate(model, glm::radians(rotUsuarioZ), glm::vec3(0.0f, 0.0f, 1.0f));
+			model = glm::rotate(model, glm::radians(rotUsuarioY), glm::vec3(0.0f, 1.0f, 0.0f));
 			glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 			glUniform1f(glGetUniformLocation(lightingShader.Program, "transparencia"), 0.0);
 			Pelota.Draw(lightingShader);
+
+			//// Velocidad
+
+			//int radio = sqrtf(powf(camera.GetFront().x, 2.0f) + powf(camera.GetFront().y, 2.0f) + powf(camera.GetFront().z, 2.0f));
+
+			//model = glm::mat4(1);
+
+
+
+			//model = glm::translate(model, glm::vec3(camera.GetPosition().x + radio * glm::cos(glm::radians(-camera.GetPitch() - 0.0f)) * glm::sin(glm::radians(-camera.GetYaw() - 270))
+			//	, camera.GetPosition().y + radio * glm::sin(glm::radians(-camera.GetPitch() - 0.0f)) * glm::sin(glm::radians(-camera.GetYaw() - 270))
+			//	, camera.GetPosition().z + radio * glm::cos(glm::radians(-camera.GetYaw() - 270))));
+
+			//printf("pitch = %f, yaw = %f\n", camera.GetPitch(), camera.GetYaw());
+
+			///*model = glm::translate(model, glm::vec3(camera.GetPosition().x + radio * glm::cos(glm::radians(-camera.GetPitch() - 0.0f)) * glm::sin(glm::radians(-camera.GetYaw() - 270.0f))
+			//	, camera.GetPosition().y + radio * glm::sin(glm::radians(-camera.GetPitch() - 0.0f)) * glm::sin(glm::radians(-camera.GetYaw() - 270.0f))
+			//	, camera.GetPosition().z + radio * glm::cos(glm::radians(-camera.GetYaw() - 270.0f))));*/
+			//model = glm::rotate(model, glm::radians(rotUsuarioX), glm::vec3(1.0f, 0.0f, 0.0f));
+			//model = glm::rotate(model, glm::radians(rotUsuarioZ), glm::vec3(0.0f, 0.0f, 1.0f));
+			//model = glm::rotate(model, glm::radians(rotUsuarioY - 90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+
+			//glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+			//glUniform1f(glGetUniformLocation(lightingShader.Program, "transparencia"), 0.0);
+			//LetreroPunto.Draw(lightingShader);
+		}
+
+		// Pelota (Usuario)
+
+		if (punto) {
+			model = glm::mat4(1);
+			glm::vec3 p = camera.GetPosition();
+			glm::vec3 f = camera.GetFront();
+			glm::vec3 r = camera.GetRight();
+			glm::vec3 up = camera.GetUp();
+			model = glm::translate(model, glm::vec3(p.x + f.x + 0.45f * r.x + 0.4f * up.x, p.y + f.y + 0.45f * r.y + 0.4f * up.y, p.z + f.z + 0.45f * r.z + 0.4f * up.z));
+			model = glm::rotate(model, glm::radians(rotUsuarioX), glm::vec3(1.0f, 0.0f, 0.0f));
+			model = glm::rotate(model, glm::radians(rotUsuarioZ), glm::vec3(0.0f, 0.0f, 1.0f));
+			model = glm::rotate(model, glm::radians(rotUsuarioY-90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+			model = glm::scale(model, glm::vec3(0.3f, 0.3f, 0.3f));
+			glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+			glUniform1f(glGetUniformLocation(lightingShader.Program, "transparencia"), 0.0);
+			LetreroPunto.Draw(lightingShader);
 		}
 
 
@@ -1161,8 +1207,11 @@ void actualizarUsuario() {
 	yUsuario = y0Usuario = camera.GetFront().y + camera.GetPosition().y;
 	zUsuario = z0Usuario = camera.GetFront().z + camera.GetPosition().z;
 	rotUsuarioY = -camera.GetYaw();
-	rotUsuarioX = (camera.GetPitch() - 180.f) * glm::sin(glm::radians(-camera.GetYaw()));
-	rotUsuarioZ = (camera.GetPitch() - 180.f) * glm::cos(glm::radians(-camera.GetYaw()));
+	float pitch = camera.GetPitch();
+	int pitchInt = pitch / 360.0;
+	//(pitch - pitchInt * 360.0f)
+	rotUsuarioX = -pitch * glm::sin(glm::radians(camera.GetYaw()));
+	rotUsuarioZ = pitch * glm::cos(glm::radians(camera.GetYaw()));
 	anguloUsuario = camera.GetPitch();
 	anguloXZUsuario = camera.GetYaw();
 }
@@ -1286,11 +1335,12 @@ void animacion()
 		if (bajando && yUsuario <= yFinalUsuario) {
 			tUsuario = 0.0f;
 			enTiroUsuario = false;
+			punto = false;
 		}
 		if (bajando && verificarPunto()) {
 			printf("PUNTO!");
-			
 			tUsuario = 0.0f;
+			punto = true;
 			enTiroUsuario = false;
 			reubicarCanasta();
 		}

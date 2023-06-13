@@ -153,6 +153,16 @@ public:
 		return this->pitch;
 	}
 
+	glm::vec3 GetRight()
+	{
+		return this->right;
+	}
+
+	glm::vec3 GetUp()
+	{
+		return this->up;
+	}
+
 private:
 	// Camera Attributes
 	glm::vec3 position;
