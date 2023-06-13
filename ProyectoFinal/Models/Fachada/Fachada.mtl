@@ -1,15 +1,16 @@
 newmtl initialShadingGroup
 illum 4
-Kd 0.50 0.50 0.50
+Kd 0.00 0.00 0.00
 Ka 0.00 0.00 0.00
 Tf 1.00 1.00 1.00
+map_Kd noEntrar.png
 Ni 1.00
 newmtl lambert11SG
 illum 4
 Kd 0.00 0.00 0.00
 Ka 0.00 0.00 0.00
 Tf 1.00 1.00 1.00
-map_Kd piedra.png
+map_Kd piedraBlanca.jpg
 Ni 1.00
 newmtl lambert12SG
 illum 4
@@ -18,10 +19,17 @@ Ka 0.00 0.00 0.00
 Tf 1.00 1.00 1.00
 map_Kd piedraBlanca.jpg
 Ni 1.00
-newmtl lambert16SG
+newmtl lambert15SG
 illum 4
 Kd 0.00 0.00 0.00
 Ka 0.00 0.00 0.00
 Tf 1.00 1.00 1.00
 map_Kd cesped.jpg
+Ni 1.00
+newmtl lambert16SG
+illum 4
+Kd 0.00 0.00 0.00
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+map_Kd piedra.png
 Ni 1.00
