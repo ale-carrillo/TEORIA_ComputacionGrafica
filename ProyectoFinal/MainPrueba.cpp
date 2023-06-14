@@ -362,6 +362,7 @@ int main()
 	Model Cohete((char*)"Models/Objetos/Cohete/Cohete.obj");
 	Model LanzaPelotas((char*)"Models/Objetos/LanzaPelotas/LanzaPelotas.obj");
 	Model Pelota((char*)"Models/Objetos/Pelota/Pelota.obj");
+	Model PelotaBask((char*)"Models/Objetos/Pelota/PelotaBask.obj");
 	Model Canasta((char*)"Models/Objetos/Canasta/canasta.obj");
 	Model Lampara((char*)"Models/Objetos/Lampara/Lampara.obj");
 	Model Nave((char*)"Models/Objetos/Nave/Nave.obj");
@@ -390,12 +391,18 @@ int main()
 	Model LetreroNeptunoInf((char*)"Models/Objetos/Informacion/letreroNeptunoInf.obj");
 
 	Model LetreroPunto((char*)"Models/Objetos/Informacion/letreroPunto.obj");
-	Model LetreroVerControlesTiro((char*)"Models/Objetos/Informacion/letreroVerMenu.obj");
 	Model LetreroControlesTiro((char*)"Models/Objetos/Informacion/letreroVerMenu.obj");
+	Model LetreroVerControlesTiro((char*)"Models/Objetos/Indicaciones/opciones.obj");
 	Model LetreroEsc((char*)"Models/Objetos/Indicaciones/esc.obj");
+
+	Model LetreroTierraInd((char*)"Models/Objetos/Indicaciones/tierraInd.obj");
+	Model LetreroMarteInd((char*)"Models/Objetos/Indicaciones/marteInd.obj");
+	Model LetreroSaturnoInd((char*)"Models/Objetos/Indicaciones/saturnoInd.obj");
 
 	Model Letrero((char*)"Models/Objetos/Letrero/letrero.obj");
 	Model Marciano((char*)"Models/Objetos/Marciano/marciano.obj");
+
+	Model TextoMarciano((char*)"Models/Objetos/Marciano/marcianoTexto.obj");
 
 
 	// Build and compile our shader program
@@ -1061,6 +1068,39 @@ int main()
 		glUniform1f(glGetUniformLocation(lightingShader.Program, "transparencia"), 0.0);
 		Marciano.Draw(lightingShader);
 
+		// Marciano
+		model = glm::mat4(1);
+		model = glm::translate(model, glm::vec3(0.0f, 3.9f, 8.0f));
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		glUniform1f(glGetUniformLocation(lightingShader.Program, "transparencia"), 0.0);
+		TextoMarciano.Draw(lightingShader);
+
+		// Tierra
+		model = glm::mat4(1);
+		model = glm::translate(model, glm::vec3(tierraCentroX, 8.0f, tierraCentroZ+5.6));
+		model = glm::rotate(model, glm::radians(165.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		glUniform1f(glGetUniformLocation(lightingShader.Program, "transparencia"), 0.0);
+		LetreroTierraInd.Draw(lightingShader);
+
+		// Marte
+		model = glm::mat4(1);
+		model = glm::translate(model, glm::vec3(-12.50f, 8.0f, -17.1f));
+		model = glm::rotate(model, glm::radians(120.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		glUniform1f(glGetUniformLocation(lightingShader.Program, "transparencia"), 0.0);
+		LetreroMarteInd.Draw(lightingShader);
+
+		// Saturno
+		model = glm::mat4(1);
+		model = glm::translate(model, glm::vec3(14.0f, 8.0f, -14.5f));
+		model = glm::rotate(model, glm::radians(50.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		glUniform1f(glGetUniformLocation(lightingShader.Program, "transparencia"), 0.0);
+		LetreroSaturnoInd.Draw(lightingShader);
+
+
+
 		// Pelota (Usuario)
 
 		if (puedeTirarUsuario) {
@@ -1071,7 +1111,7 @@ int main()
 			model = glm::rotate(model, glm::radians(rotUsuarioY), glm::vec3(0.0f, 1.0f, 0.0f));
 			glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 			glUniform1f(glGetUniformLocation(lightingShader.Program, "transparencia"), 0.0);
-			Pelota.Draw(lightingShader);
+			PelotaBask.Draw(lightingShader);
 
 			//// Velocidad
 
@@ -1142,7 +1182,7 @@ int main()
 			model = glm::rotate(model, glm::radians(rotUsuarioX), glm::vec3(1.0f, 0.0f, 0.0f));
 			model = glm::rotate(model, glm::radians(rotUsuarioZ), glm::vec3(0.0f, 0.0f, 1.0f));
 			model = glm::rotate(model, glm::radians(rotUsuarioY - 90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-			model = glm::scale(model, glm::vec3(0.5f));
+			model = glm::scale(model, glm::vec3(0.35f));
 			glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 			glUniform1f(glGetUniformLocation(lightingShader.Program, "transparencia"), 0.0);
 			LetreroVerControlesTiro.Draw(lightingShader);
