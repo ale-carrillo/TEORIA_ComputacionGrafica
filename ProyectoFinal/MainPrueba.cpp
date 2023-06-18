@@ -42,7 +42,7 @@ const GLuint WIDTH = 1920, HEIGHT = 1080;
 int SCREEN_WIDTH, SCREEN_HEIGHT;
 
 // Camera
-Camera  camera(glm::vec3(-4.0f, 6.0f, 20.0f));
+Camera  camera(glm::vec3(0.0f, 6.0f, 15.0f));
 GLfloat lastX = WIDTH / 2.0;
 GLfloat lastY = HEIGHT / 2.0;
 bool keys[1024];
@@ -137,7 +137,7 @@ float xUsuario = x0Usuario, zUsuario = z0Usuario, yUsuario = y0Usuario;
 float rotUsuarioX, rotUsuarioY, rotUsuarioZ;
 bool puedeTirarUsuario, enTiroUsuario, punto, mostrarControlesTiro;
 float tempo = 0.0f;
-float canastaX, canastaY, canastaZ, canastaRadio = 1.7f;
+float canastaX, canastaY, canastaZ, canastaRadio = 0.8f;
 
 // Para todos los tiros parabólicos
 float tIncGlobal = 0.004f;
